@@ -1,0 +1,985 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GOChatAPI</name>
+    </assembly>
+    <members>
+        <member name="M:GOChatAPI.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
+            </summary>
+            <param name="description">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The ID as a string.</returns>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.HelpPageConfig">
+            <summary>
+            Use this class to customize the Help Page.
+            For example you can set a custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> to supply the documentation
+            or you can provide the samples for the requests/responses.
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.Controllers.HelpController">
+            <summary>
+            The controller that will handle requests for the help page.
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetDocumentationProvider(System.Web.Http.HttpConfiguration,System.Web.Http.Description.IDocumentationProvider)">
+            <summary>
+            Sets the documentation provider for help page.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="documentationProvider">The documentation provider.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleObjects(System.Web.Http.HttpConfiguration,System.Collections.Generic.IDictionary{System.Type,System.Object})">
+            <summary>
+            Sets the objects that will be used by the formatters to produce sample requests/responses.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleObjects">The sample objects.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type and action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample request directly for the specified media type and action with parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type of the action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample response directly for the specified media type of the action with specific parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForMediaType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Sets the sample directly for all actions with the specified media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Sets the sample directly for all actions with the specified type and media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The parameter type or return type of an action.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <returns>The help page sample generator.</returns>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration,GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator)">
+            <summary>
+            Sets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleGenerator">The help page sample generator.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.GetModelDescriptionGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the model description generator.
+            </summary>
+            <param name="config">The configuration.</param>
+            <returns>The <see cref="T:GOChatAPI.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator"/></returns>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageApiModel(System.Web.Http.HttpConfiguration,System.String)">
+            <summary>
+            Gets the model that represents an API displayed on the help page. The model is initialized on the first call and cached for subsequent calls.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="apiDescriptionId">The <see cref="T:System.Web.Http.Description.ApiDescription"/> ID.</param>
+            <returns>
+            An <see cref="T:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel"/>
+            </returns>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.ModelDescriptions.ModelDescription">
+            <summary>
+            Describes a type model.
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator">
+            <summary>
+            Generates model descriptions for given types.
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.ModelDescriptions.ModelNameAttribute">
+            <summary>
+            Use this attribute to change the name of the <see cref="T:GOChatAPI.Areas.HelpPage.ModelDescriptions.ModelDescription"/> generated for a type.
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel">
+            <summary>
+            The model that represents an API displayed on the help page.
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel"/> class.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription">
+            <summary>
+            Gets or sets the <see cref="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription"/> that describes the API.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.UriParameters">
+            <summary>
+            Gets or sets the <see cref="T:GOChatAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription"/> collection that describes the URI parameters for the API.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.RequestDocumentation">
+            <summary>
+            Gets or sets the documentation for the request.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.RequestModelDescription">
+            <summary>
+            Gets or sets the <see cref="T:GOChatAPI.Areas.HelpPage.ModelDescriptions.ModelDescription"/> that describes the request body.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.RequestBodyParameters">
+            <summary>
+            Gets the request body parameter descriptions.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.ResourceDescription">
+            <summary>
+            Gets or sets the <see cref="T:GOChatAPI.Areas.HelpPage.ModelDescriptions.ModelDescription"/> that describes the resource.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.ResourceProperties">
+            <summary>
+            Gets the resource property descriptions.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.SampleRequests">
+            <summary>
+            Gets the sample requests associated with the API.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.SampleResponses">
+            <summary>
+            Gets the sample responses associated with the API.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.Models.HelpPageApiModel.ErrorMessages">
+            <summary>
+            Gets the error messages associated with this model.
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator">
+            <summary>
+            This class will generate the samples for the help page.
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator"/> class.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.ActualHttpMessageTypes">
+            <summary>
+            Gets CLR types that are used as the content of <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples">
+            <summary>
+            Gets the objects that are used directly as samples for certain actions.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects">
+            <summary>
+            Gets the objects that are serialized as samples by the supported formatters.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories">
+            <summary>
+            Gets factories for the objects that the supported formatters will serialize as samples. Processed in order,
+            stopping when the factory successfully returns a non-<see langref="null"/> object.
+            </summary>
+            <remarks>
+            Collection includes just <see cref="M:GOChatAPI.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)"/> initially. Use
+            <code>SampleObjectFactories.Insert(0, func)</code> to provide an override and
+            <code>SampleObjectFactories.Add(func)</code> to provide a fallback.</remarks>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.GetSampleRequests(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the request body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.GetSampleResponses(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the response body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.GetSample(System.Web.Http.Description.ApiDescription,GOChatAPI.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Gets the request or response body samples.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.GetActionSample(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Type,System.Net.Http.Formatting.MediaTypeFormatter,System.Net.Http.Headers.MediaTypeHeaderValue,GOChatAPI.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Search for samples that are provided directly through <see cref="P:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples"/>.
+            </summary>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="type">The CLR type.</param>
+            <param name="formatter">The formatter.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The sample that matches the parameters.</returns>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.GetSampleObject(System.Type)">
+            <summary>
+            Gets the sample object that will be serialized by the formatters. 
+            First, it will look at the <see cref="P:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create
+            one using <see cref="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.DefaultSampleObjectFactory(GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator,System.Type)"/> (which wraps an <see cref="T:GOChatAPI.Areas.HelpPage.ObjectGenerator"/>) and other
+            factories in <see cref="P:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The sample object.</returns>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.ResolveHttpRequestMessageType(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Resolves the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The type.</returns>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.ResolveType(System.Web.Http.Description.ApiDescription,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},GOChatAPI.Areas.HelpPage.SampleDirection,System.Collections.ObjectModel.Collection{System.Net.Http.Formatting.MediaTypeFormatter}@)">
+            <summary>
+            Resolves the type of the action parameter or return value when <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/> is used.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or a response.</param>
+            <param name="formatters">The formatters.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleGenerator.WriteSampleObjectUsingFormatter(System.Net.Http.Formatting.MediaTypeFormatter,System.Object,System.Type,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Writes the sample object using formatter.
+            </summary>
+            <param name="formatter">The formatter.</param>
+            <param name="value">The value.</param>
+            <param name="type">The type.</param>
+            <param name="mediaType">Type of the media.</param>
+            <returns></returns>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.HelpPageSampleKey">
+            <summary>
+            This is used to identify the place where the sample should be applied.
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Creates a new <see cref="T:GOChatAPI.Areas.HelpPage.HelpPageSampleKey"/> based on media type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Creates a new <see cref="T:GOChatAPI.Areas.HelpPage.HelpPageSampleKey"/> based on media type and CLR type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The CLR type.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.#ctor(GOChatAPI.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:GOChatAPI.Areas.HelpPage.HelpPageSampleKey"/> based on <see cref="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="sampleDirection">The <see cref="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,GOChatAPI.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:GOChatAPI.Areas.HelpPage.HelpPageSampleKey"/> based on media type, <see cref="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The <see cref="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.ControllerName">
+            <summary>
+            Gets the name of the controller.
+            </summary>
+            <value>
+            The name of the controller.
+            </value>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.ActionName">
+            <summary>
+            Gets the name of the action.
+            </summary>
+            <value>
+            The name of the action.
+            </value>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.MediaType">
+            <summary>
+            Gets the media type.
+            </summary>
+            <value>
+            The media type.
+            </value>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.ParameterNames">
+            <summary>
+            Gets the parameter names.
+            </summary>
+        </member>
+        <member name="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection">
+            <summary>
+            Gets the <see cref="P:GOChatAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.ImageSample">
+            <summary>
+            This represents an image sample on the help page. There's a display template named ImageSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.ImageSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GOChatAPI.Areas.HelpPage.ImageSample"/> class.
+            </summary>
+            <param name="src">The URL of an image.</param>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.InvalidSample">
+            <summary>
+            This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.ObjectGenerator">
+            <summary>
+            This class will create an object of a given type and populate it with sample data.
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)">
+            <summary>
+            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
+            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
+            Complex types: POCO types.
+            Nullables: <see cref="T:System.Nullable`1"/>.
+            Arrays: arrays of simple types or complex types.
+            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
+            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
+            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>An object of the given type.</returns>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.SampleDirection">
+            <summary>
+            Indicates whether the sample is used for request or response
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.TextSample">
+            <summary>
+            This represents a preformatted text sample on the help page. There's a display template named TextSample associated with this class.
+            </summary>
+        </member>
+        <member name="T:GOChatAPI.Areas.HelpPage.XmlDocumentationProvider">
+            <summary>
+            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Areas.HelpPage.XmlDocumentationProvider.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GOChatAPI.Areas.HelpPage.XmlDocumentationProvider"/> class.
+            </summary>
+            <param name="documentPath">The physical path to XML document.</param>
+        </member>
+        <member name="T:GOChatAPI.Controllers.ChatsController">
+            <summary>
+            Defines all API endoints concerning chats in a chatroom
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.GetChatRoomChats(System.String)">
+            <summary>
+            Get's the chats pertaining to a particular chatroom
+            </summary>
+            <param name="Base64ChatRoomID">Chatroom id in base 64 format</param>
+            <returns>Chat model</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.Get(System.String)">
+            <summary>
+            Get's details about a particular chat using it's id
+            </summary>
+            <param name="chatid">The ID of the chat to be returned</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.Post(System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+             <summary>
+             Posts a new chat from the chatroom into the database
+             </summary>
+             <param name="UserID">Id of the user that posted the chat</param>
+             <param name="Base64IPAddress">Base 64 IP address of the user posting the chat</param>
+             <param name="Base64ChatRoomID">Base 64 string of user's chatroom</param>
+             <param name="Message">Message of the chat</param>
+             <param name="AuthorID">ID of user sending the chat</param>
+             <param name="ParentID">ID of chat to be replied</param>
+             <param name="ChatType">The chat specification</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.PostFile(System.String,System.String,System.String,System.String)">
+             <summary>
+             Posts a new chat file from the chatroom into the database
+             </summary>
+             <param name="UserID">Id of the user that posted the chat</param>
+             <param name="Base64IPAddress">Base 64 IP address of the user posting the chat</param>
+             <param name="Base64ChatRoomID">Base 64 string of user's chatroom</param>
+             <param name="ChatID">The ID of the chat the files are referring to</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.PostChat(System.String,System.String,GOChatAPI.Models.ChatsModel)">
+             <summary>
+             Posts a new chat from the chatroom into the database
+             </summary>
+             <param name="UserID">Id of the user that posted the chat</param>
+             <param name="Base64IPAddress">Base 64 IP address of the user posting the chat</param>
+             <param name="chats">Object in which the JSON body is being mapped into</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.Delete(System.String,System.String,System.String)">
+            <summary>
+            Delete's a specific chat pertaining a user frm the database
+            </summary>
+            <param name="ChatID">The ID of the chat to be deleted</param>
+            <param name="UserID">The ID of the user sending this request</param>
+            <param name="Base64IPAddress">The base 64 IP address of the user sending the request</param>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.PostReaction(System.String,System.String,GOChatAPI.Models.Reaction)">
+            <summary>
+            Post's or delete's a new chat reaction based on a User ID
+            </summary>
+            <param name="chat">The object in which the JSON body will be mapped into</param>
+            <param name="UserID">The ID of the user sending this request</param>
+            <param name="Base64IPAddress">The base 64 IP address of the user sending the request</param>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.GetChatReactions(System.String)">
+            <summary>
+            Get's all reactions pertaining to a particular chat
+            </summary>
+            <param name="UserID">Id of the user making this request</param>
+            <param name="Base64IPAddress">Base 64 IP address of user making this request</param>
+            <param name="ChatID">Id of chat</param>
+            <returns>Reaction group list</returns>
+        </member>
+        <member name="T:GOChatAPI.Controllers.DiscussionController">
+            <summary>
+            Handles all endpoints concerning discussions
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Controllers.DiscussionController.Get">
+            <summary>
+            Gets all discussions pertaining to a user
+            </summary>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.DiscussionController.Post(GOChatAPI.Models.DiscussionModel)">
+            <summary>
+            Posts a new discussion pertaining to a user
+            </summary>
+            <param name="body"></param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.DiscussionController.Delete(System.String)">
+            <summary>
+            Delete discussion group from database pertaining to a user
+            </summary>
+            <returns>Response object</returns>
+        </member>
+        <member name="T:GOChatAPI.Controllers.NotificationController">
+            <summary>
+            Handles all API endpoints concerning notifications
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Controllers.NotificationController.Get">
+            <summary>
+            Gets all notifications concerning a user
+            </summary>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.NotificationController.Get_Group(System.String)">
+            <summary>
+            Gets all notifications concerning a group
+            </summary>
+            <param name="groupid">The Id of the chatroom</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.NotificationController.Get(System.String)">
+            <summary>
+            Get's one notification
+            </summary>
+            <param name="id">id of the notification</param>
+            <returns></returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.NotificationController.Post(System.Collections.Generic.List{GOChatAPI.Models.NotificationModel})">
+            <summary>
+            Posts a new notification into the database
+            </summary>
+            <param name="notification">The object in which the JSON body will be mapped into</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.NotificationController.Put(System.Int32)">
+            <summary>
+            Update's a notification from the database
+            </summary>
+            <param name="id">The ID of the notification to be updated</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.NotificationController.Delete(System.Int32)">
+            <summary>
+            Delete's a notification from the database
+            </summary>
+            <param name="id">The ID of the notification to be deleted</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="T:GOChatAPI.Controllers.RequestController">
+            <summary>
+            Handles all API's responsible for sending, validating and recieving requests(Friend and chatroom requests)
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController.CreateRequest(GOChatAPI.Models.RequestModel)">
+            <summary>
+            Creates a new request in the database
+            </summary>
+            <returns>Response object</returns>
+            <param name="request">Maps the body into a request object</param>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController.GetSentRequests(System.String,System.String)">
+            <summary>
+            Gets all requests sent by a specific user
+            </summary>
+            <param name="UserID">Parameter for id of user</param>
+            <param name="Base64IPAddress">Parameter for IP address of User in base 64 string to verify if he/she is loggged in</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController.GetRecievedRequests(System.String,System.String)">
+            <summary>
+            Gets all requests sent to a specific user
+            </summary>
+            <param name="UserID">Parameter for id of user</param>
+            <param name="Base64IPAddress">Parameter for IP address of User in base 64 string to verify if he/she is loggged in</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController.DeleteRequest(System.String,System.String,System.Int32)">
+            <summary>
+            Deletes a request/invitation sent to or by a user from the database
+            </summary>
+            <param name="UserID">ID of user</param>
+            <param name="Base64IPAddress">Base 64 ip address of user</param>
+            <param name="ID">ID of request in the database table</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController.AcceptRequest(System.String,System.String,System.Int32)">
+            <summary>
+            Inserts a new chatroom and chatroom member in the database based of the data returned
+            </summary>
+            <param name="UserID">ID of user</param>
+            <param name="Base64IPAddress">Base 64 ip address of user</param>
+            <param name="ID">Get's the ID of the particular request to evaluate</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController.VerifyRequestStatus(System.String,System.String)">
+            <summary>
+            Verifies if a user is allowed to send a request to another user or chatroom(group)
+            </summary>
+            <param name="UserID">The ID of the sender</param>
+            <param name="Recipient">The ID of the recipient</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController.DeleteRequest(System.String,System.String,System.String)">
+            <summary>
+            Deletes a request/invitation sent to or by a user from the database
+            </summary>
+            <param name="UserID">ID of use/request sender</param>
+            <param name="Base64IPAddress">Base 64 ip address of user</param>
+            <param name="To_ID">ID of request recipient</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController._GetSentRequests(System.String)">
+            <summary>
+            Gets all requests sent by a specific user
+            </summary>
+            <param name="UserID">Parameter for id of user</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController._GetRecievedRequests(System.String)">
+            <summary>
+            Gets all requests sent to a specific user
+            </summary>
+            <param name="UserID">Parameter for id of user</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController._DeleteRequest(System.String,System.Int32)">
+            <summary>
+            Deletes a request/invitation sent to or by a user from the database
+            </summary>
+            <param name="UserID">ID of user</param>
+            <param name="ID">ID of request in the database table</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController._AcceptRequest(System.String,System.Int32)">
+            <summary>
+            Inserts a new chatroom and chatroom member in the database based of the data returned
+            </summary>
+            <param name="UserID">ID of user</param>
+            <param name="ID">Get's the ID of the particular request to evaluate</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController._VerifyRequestStatus_Group(System.String,System.String)">
+            <summary>
+            Verifies if a user is allowed to send a request to another user or chatroom(group)
+            </summary>
+            <param name="UserID">The ID of the sender</param>
+            <param name="groupid">The ID of the group</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController._DeleteRequest(System.String,System.String)">
+            <summary>
+            Deletes a request/invitation sent to or by a user from the database
+            </summary>
+            <param name="UserID">ID of use/request sender</param>
+            <param name="To_ID">ID of request recipient</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="T:GOChatAPI.Controllers.UserController">
+            <summary>
+            Handles all API endoints concerning the user and it's information
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.GetAll(System.String,System.String)">
+            <summary>
+            Get all users of the chat application
+            </summary>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.Get(System.String,System.String)">
+            <summary>
+            Returns a single user based on his/her userid and IP address
+            </summary>
+            <param name="UserID"></param>
+            <returns>User Object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.Get(System.String)">
+            <summary>
+            Returns a single user based on his/her userid and IP address
+            </summary>
+            <param name="UserID"></param>
+            <returns>User Object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.Login(GOChatAPI.Models.UserModel)">
+            <summary>
+            Check user login credidentials
+            </summary>
+            <param name="userModel"></param>
+            <returns>User object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.IsOnline(GOChatAPI.Models.UserModel)">
+            <summary>
+            To change the online state of a user
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.LastSeen(System.String)">
+            <summary>
+            Change user lastseen to NOW...
+            </summary>
+            <param name="UserId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.Register(GOChatAPI.Models.UserModel)">
+            <summary>
+            Creates a new user in the database
+            </summary>
+            <param name="user">User object in which the JSON object is being mapped into</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.UpdateOTP(GOChatAPI.Models.UserModel)">
+            <summary>
+            Inserts One time password in the database with record of user specified in the user object and sends mail to the user
+            </summary>
+            <param name="user">Object the JSON body is being mapped into</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.EraseOTP(GOChatAPI.Models.UserModel)">
+            <summary>
+            Erases One time password from database with record of specified user. Usually done when the OTP is verified or when he exits the client side application
+            </summary>
+            <param name="user">Object the JSON body is mapped into</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.ConfirmOTP(GOChatAPI.Models.UserModel)">
+            <summary>
+            Confirms OTP of user, if true returns true else returns false
+            </summary>
+            <param name="user">Object the JSON body is being mapped into</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.GetUser(GOChatAPI.Models.UserModel)">
+            <summary>
+            As the name implies it gets a user by his/her email address
+            </summary>
+            <param name="body">The object the body is being mapped into</param>
+            <returns>Boolean</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.LogIPAddress(GOChatAPI.Models.IPAddressModel)">
+            <summary>
+            This is to insert or update user IP address after registeration or login
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.DeleteIPAddress(System.String,System.String)">
+            <summary>
+            This deletes user IP address from log table. Usually done when user logs out of his/her account
+            </summary>
+            <param name="UserID">This accepts the user's id</param>
+            <param name="Base64IPAddress">This accepts the existing IP address in a base64 string</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.UpdateUser(System.String,System.String,GOChatAPI.Models.UserModel)">
+            <summary>
+            Updates user information with userid passed in the URI
+            </summary>
+            <param name="UserID">ID of user</param>
+            <param name="Base64IPAddress">Base 64 ip address</param>
+            <param name="user">Object in which the body is being mapped into</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.UpdateUserProfilePicture(System.String,System.String)">
+            <summary>
+            Updates the profile picture of user with userid in the URI
+            </summary>
+            <param name="UserID">ID of user</param>
+            <param name="Base64IPAddress">IP address in a base64 fromat </param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.UserController.ChangePassword(System.String,System.String,GOChatAPI.Models.PasswordModel)">
+            <summary>
+            Changes the password of user with userid in the URI
+            </summary>
+            <param name="UserID">ID of user</param>
+            <param name="Base64IPAddress">IP address in a base64 fromat </param>
+            <param name="password">Object the JSON body is being mapped into</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="T:GOChatAPI.Controllers.ChatRoomController">
+            <summary>
+            Handles all API's and routes concerning chatrooms
+            </summary>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetChatRooms_Group">
+            <summary>
+            Gets all chatRooms of type group in the database
+            </summary>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetUserGroups">
+            <summary>
+            Gets all groups created by a user in the database
+            </summary>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetUser_Fellas_Minus_Group_Members(System.String)">
+            <summary>
+            Gets all fellas associated to a user except those who are already members of this group with the given chatroomId in the database
+            </summary>
+            <param name="chatroomId">The id of the group</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetUser_Users_Minus_Group_Members(System.String)">
+            <summary>
+            Gets all users except those who are already members of this group with the given chatroomId in the database
+            </summary>
+            <param name="chatroomId">The id of the group</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Block_Fella(System.String,System.String,System.String,System.String)">
+            <summary>
+            Deletes OR blocks private chatroom users, chats and the chatroom itself
+            </summary>
+            <param name="UserID">The ID of the user sending the request</param>
+            <param name="Base64Password">The base64 password of the user sending the request</param>
+            <param name="Base64IPAddress">The IP address of the user sending this request</param>
+            <param name="RecipientID">The ID of the recipient</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Ignore_Fella(System.String,System.String,System.String)">
+            <summary>
+            Temporary blocks or ignores a user in a chatroom
+            </summary>
+            <param name="UserID">ID of the user sending the request</param>
+            <param name="RecipientID">ID of the user to be ignored</param>
+            <param name="Base64IPAddress">Base64 IP address of user sending the request</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Exit_Group(System.String)">
+            <summary>
+            Removes a user as a member of a chatroom
+            </summary>
+            <param name="groupid">ID of the group to be exited</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Remove_Member(System.String,System.String)">
+            <summary>
+            Removes a user as a member of a chatroom
+            </summary>
+            <param name="userid">ID of the user to be removed</param>
+            <param name="groupid">ID of the group to be exited</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Unignore_Fella(System.String,System.String,System.String)">
+            <summary>
+            Restore Ignored fella into a chatroom
+            </summary>
+            <param name="UserID">ID of the user sending the request</param>
+            <param name="RecipientID">ID of the user to be restored</param>
+            <param name="Base64IPAddress">Base64 IP address of user sending the request</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetUserChatRooms(System.String,System.String)">
+            <summary>
+            Gets all chatRooms associated to a user
+            </summary>
+            <param name="UserID">The ID of the user sending the request</param>
+            <param name="Base64IPAddress">The IP address of the user sending the request</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetChatRoom(System.String,System.String,System.String)">
+            <summary>
+            Get a chatroom related to a user using it's ID
+            </summary>
+            <param name="Base64ChatRoomID">The ID of the Chatroom to be returned</param>
+            <param name="UserID">The ID of the user sending the request</param>
+            <param name="Base64IPAddress">The IP address of the user sending the request</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetChatroom(System.String)">
+            <summary>
+            Get a chatroom related to a user using it's ID (optimized)
+            </summary>
+            <param name="chatroomid">The ID of the Chatroom to be returned</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Post(GOChatAPI.Models.ChatRoomModel)">
+            <summary>
+            Post's a new Chatroom in the database of type 'Group'
+            </summary>
+            <param name="group">Object in which JSON body will be mapped into </param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Update_ChatRoom_Details(System.String,GOChatAPI.Models.ChatRoomModel)">
+            <summary>
+            Updates the details of a chattroom
+            </summary>
+            <param name="group">Object in which JSON body will be mapped into </param>
+            <param name="chatroomid">The ID of the chatroom to be updated</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.PostFile(System.String)">
+             <summary>
+             Updates chatroom picture in the database
+             </summary>
+             <param name="chatroomid">ID of the chatroom to update</param>
+            <returns>Response object</returns>
+        </member>
+        <member name="T:GOChatAPI.Models.RequestModel">
+            <summary>
+            Object in which Request JSON body is being mapped into
+            </summary>
+        </member>
+    </members>
+</doc>
