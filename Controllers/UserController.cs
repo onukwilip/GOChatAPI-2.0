@@ -282,6 +282,54 @@ namespace GOChatAPI.Controllers
         }
 
         /// <summary>
+        /// Returns a single user based on his/her token
+        /// </summary>
+        /// <returns>User Object</returns>
+        [Route("validate")]
+        [HttpGet]
+        public ResponseModel Get()
+        {
+            ResponseModel response = new ResponseModel();
+
+            con.Open();
+
+            SqlCommand cmd = new SqlCommand("GetUserByIDWithoutIPAddress", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+
+            int rows = dt.Rows.Count;
+
+            if (rows > 0)
+            {
+                if (Convert.ToInt32(dt.Rows[0]["Authenticated"]) > 0)
+                {
+                    int success = (int)ResponseCodes.Successfull;
+                    response.ResponseCode = success;
+                    response.ResponseMessage = ResponseCodes.Successfull.ToString();
+                }
+                else
+                {
+                    int noUser = (int)ResponseCodes.NotFound;
+                    response.ResponseCode = noUser;
+                    response.ResponseMessage ="UnAuthenticated";
+                }
+            }
+            else
+            {
+                int noUser = (int)ResponseCodes.NotFound;
+                response.ResponseCode = noUser;
+                response.ResponseMessage = ResponseCodes.NotFound.ToString();
+            }
+
+            con.Close();
+
+            return response;
+        }
+
+        /// <summary>
         /// Check user login credidentials
         /// </summary>
         /// <param name="userModel"></param>

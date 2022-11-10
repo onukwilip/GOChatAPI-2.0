@@ -19,12 +19,14 @@ namespace GOChatAPI
             app.UseCors(CorsOptions.AllowAll);
 
             var myProvider = new MyAuthorizationServerProvider();
+            var refreshTokenProvider = new RefreshTokenProvider();
             OAuthAuthorizationServerOptions options = new OAuthAuthorizationServerOptions
             {
                 AllowInsecureHttp = true,
                 TokenEndpointPath = new PathString("/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(30),
-                Provider = myProvider
+                AccessTokenExpireTimeSpan = TimeSpan.FromMinutes(5),
+                Provider = myProvider,
+                RefreshTokenProvider = refreshTokenProvider
             };
             app.UseOAuthAuthorizationServer(options);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());

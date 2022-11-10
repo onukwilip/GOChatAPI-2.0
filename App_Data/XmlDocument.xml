@@ -761,6 +761,12 @@
             <param name="UserID"></param>
             <returns>User Object</returns>
         </member>
+        <member name="M:GOChatAPI.Controllers.UserController.Get">
+            <summary>
+            Returns a single user based on his/her token
+            </summary>
+            <returns>User Object</returns>
+        </member>
         <member name="M:GOChatAPI.Controllers.UserController.Login(GOChatAPI.Models.UserModel)">
             <summary>
             Check user login credidentials
@@ -976,10 +982,194 @@
              <param name="chatroomid">ID of the chatroom to update</param>
             <returns>Response object</returns>
         </member>
+        <member name="M:GOChatAPI.General.Random">
+            <summary>
+            Generates a random set of 6 digits,
+            commonly used to generate random One time passwords (OTP)
+            </summary>
+            <returns>6 Random digits</returns>
+        </member>
+        <member name="M:GOChatAPI.General.Mail(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Sends mail using google smtp
+            </summary>
+            <param name="fromEmail">The email address of the sender</param>
+            <param name="toEmail">The email address of the reciepient</param>
+            <param name="fromName">The Name sender</param>
+            <param name="toName">The name of the reciepient</param>
+            <param name="body">The body of the mail</param>
+            <param name="subject">The subject of the mail</param>
+            <returns>String message if successfull else error message</returns>
+        </member>
+        <member name="M:GOChatAPI.General.Mail2(System.String,System.String,System.String)">
+            <summary>
+            Sends mail using google smtp
+            </summary>
+            <param name="email">The email address to be sent to</param>
+            <param name="Body">The body of the mail</param>
+            <param name="subject">The subject of the mail</param>
+            <returns>String message if successfull else error message</returns>
+        </member>
+        <member name="M:GOChatAPI.General.Encrypt(System.String)">
+            <summary>
+            Encrypts an encrypted string
+            </summary>
+            <param name="encryptString">The string to be encrypted</param>
+            <returns>Encrypted string</returns>
+        </member>
+        <member name="M:GOChatAPI.General.Decrypt(System.String)">
+            <summary>
+            Decrypts an encrypted string
+            </summary>
+            <param name="cipherText">The string to be decrypted</param>
+            <returns>Decrypted string</returns>
+        </member>
+        <member name="M:GOChatAPI.General.GetHash(System.String)">
+            <summary>
+            Outputs the hash of the inserted string
+            </summary>
+            <param name="input">The string to be hashed</param>
+            <returns>Hashed string</returns>
+        </member>
+        <member name="M:GOChatAPI.General.ValidateUser(System.String,System.String)">
+            <summary>
+            Method called to validate user in database using user id and password
+            </summary>
+            <param name="userId"> The Id the user to be validated</param>
+            <param name="password"> The password of the user</param>
+            <returns> User model object if user is found, else null.</returns>
+        </member>
+        <member name="M:GOChatAPI.General.ValidateClient(System.String,System.String)">
+            <summary>
+            Validates a client in the database
+            </summary>
+            <param name="clientId">Id of the client</param>
+            <param name="clientSecret">secret password of the client</param>
+            <returns>Client model if found, else null</returns>
+        </member>
+        <member name="M:GOChatAPI.General.ValidateRefreshToken(GOChatAPI.Models.RefreshToken)">
+            <summary>
+             Method called to add a refresh token if it doesn't exist else, delete existing and add a new one
+            </summary>
+            <param name="token">token: the token object</param>
+            <returns> Returns true</returns>
+        </member>
+        <member name="M:GOChatAPI.General.GetRefreshToken(GOChatAPI.Models.RefreshToken)">
+            <summary>
+             Method called to get a refresh token from the database using it's userid and clientid
+            </summary>
+            <param name="token">The token object</param>
+            <returns> Returns tpken object if found, else null</returns>
+        </member>
+        <member name="M:GOChatAPI.General.GetRefreshTokenByID(System.String)">
+            <summary>
+             Method called to get a refresh token from the database using it's token id
+            </summary>
+            <param name="token">The token id</param>
+            <returns> Returns token object if found, else null</returns>
+        </member>
+        <member name="M:GOChatAPI.General.AddRefreshToken(GOChatAPI.Models.RefreshToken)">
+            <summary>
+            Method called to add a refresh token to the database
+            </summary>
+            <param name="token"> The token object</param>
+            <returns>Returns true if found, else false</returns>
+        </member>
+        <member name="M:GOChatAPI.General.RemoveRefreshToken(GOChatAPI.Models.RefreshToken)">
+            <summary>
+             Method called to delete a refresh token from the database using it's userid and clientid
+            </summary>
+            <param name="token">The token object</param>
+            <returns>Returns true if deleted, else false</returns>
+        </member>
+        <member name="M:GOChatAPI.General.RemoveRefreshTokenByID(System.String)">
+            <summary>
+             Method called to delete a refresh token from the database using it's id
+            </summary>
+            <param name="token">The token id</param>
+            <returns>Returns true if deleted, else false</returns>
+        </member>
         <member name="T:GOChatAPI.Models.RequestModel">
             <summary>
             Object in which Request JSON body is being mapped into
             </summary>
+        </member>
+        <member name="M:GOChatAPI.MyAuthorizationServerProvider.ValidateClientAuthentication(Microsoft.Owin.Security.OAuth.OAuthValidateClientAuthenticationContext)">
+            <summary>
+            Called to validate that the origin of the request is a registered "client_id",
+                and that the correct credentials for that client are present on the request.
+                If the web application accepts Basic authentication credentials, context.TryGetBasicCredentials(out
+                clientId, out clientSecret) may be called to acquire those values if present
+                in the request header. If the web application accepts "client_id" and "client_secret"
+                as form encoded POST parameters, context.TryGetFormCredentials(out clientId,
+                out clientSecret) may be called to acquire those values if present in the request
+                body. If context.Validated is not called the request will not proceed further.
+            Validate client basic auth before proceeding to generating the tokens
+            </summary>
+            <param name="context">The context</param>
+            <returns></returns>
+        </member>
+        <member name="M:GOChatAPI.MyAuthorizationServerProvider.GrantResourceOwnerCredentials(Microsoft.Owin.Security.OAuth.OAuthGrantResourceOwnerCredentialsContext)">
+            <summary>
+             Called when a request to the Token endpoint arrives with a "grant_type" of "password".
+                This occurs when the user has provided name and password credentials directly
+                into the client application's user interface, and the client application is using
+                those to acquire an "access_token" and optional "refresh_token". If the web application
+                supports the resource owner credentials grant type it must validate the context.Username
+                and context.Password as appropriate. To issue an access token the context.Validated
+                must be called with a new ticket containing the claims about the resource owner
+                which should be associated with the access token. The application should take
+                appropriate measures to ensure that the endpoint isn’t abused by malicious callers.
+                The default behavior is to reject this grant type. See also http://tools.ietf.org/html/rfc6749#section-4.3.2
+            If client basic auth is validated, generate the access_token
+            </summary>
+            <param name="context">The context of the event carries information in and results out.</param>
+            <returns></returns>
+        </member>
+        <member name="M:GOChatAPI.MyAuthorizationServerProvider.TokenEndpoint(Microsoft.Owin.Security.OAuth.OAuthTokenEndpointContext)">
+            <summary>
+            Called at the final stage of a successful Token endpoint request. An application
+                may implement this call in order to do any final modification of the claims being
+                used to issue access or refresh tokens. This call may also be used in order to
+                add additional response parameters to the Token endpoint's json response body.
+            </summary>
+            <param name="context">The context of the event carries information in and results out.</param>
+            <returns></returns>
+        </member>
+        <member name="M:GOChatAPI.MyAuthorizationServerProvider.GrantRefreshToken(Microsoft.Owin.Security.OAuth.OAuthGrantRefreshTokenContext)">
+            <summary>
+              Called when a request to the Token endpoint arrives with a "grant_type" of "refresh_token".
+                This occurs if your application has issued a "refresh_token" along with the "access_token",
+                and the client is attempting to use the "refresh_token" to acquire a new "access_token",
+                and possibly a new "refresh_token". To issue a refresh token the an Options.RefreshTokenProvider
+                must be assigned to create the value which is returned. The claims and properties
+               associated with the refresh token are present in the context.Ticket. The application
+                must call context.Validated to instruct the Authorization Server middleware to
+                issue an access token based on those claims and properties. The call to context.Validated
+                may be given a different AuthenticationTicket or ClaimsIdentity in order to control
+                which information flows from the refresh token to the access token. The default
+                behavior when using the OAuthAuthorizationServerProvider is to flow information
+                from the refresh token to the access token unmodified. See also http://tools.ietf.org/html/rfc6749#section-6
+            </summary>
+            <param name="context"> The context of the event carries information in and results out.</param>
+            <returns>Task to enable asynchronous execution</returns>
+        </member>
+        <member name="M:GOChatAPI.RefreshTokenProvider.CreateAsync(Microsoft.Owin.Security.Infrastructure.AuthenticationTokenCreateContext)">
+            <summary>
+            Creates a new Refresh token, adds it to the database and the response body if the client id exists, else returns Invalid
+            </summary>
+            <param name="context">The context</param>
+            <returns></returns>
+        </member>
+        <member name="M:GOChatAPI.RefreshTokenProvider.ReceiveAsync(Microsoft.Owin.Security.Infrastructure.AuthenticationTokenReceiveContext)">
+            <summary>
+            Get's previous refresh token by id from database, if exists it deletes 
+            it in order to add a new one. It also deserializes the protected ticket 
+            from the token if found inorder to build a new ticket and identity for 
+            the user mapped to this token. This proceeds to call the 'GrantRefreshToken()' method
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>
