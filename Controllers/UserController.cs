@@ -35,18 +35,13 @@ namespace GOChatAPI.Controllers
         /// </summary>
         /// <returns>Response object</returns>
         [HttpGet]
-        [Route("all/{UserID}/{Base64IpAddress}")]
-        public ResponseModel GetAll(string UserID, string Base64IpAddress)
+        [Route("all")]
+        public ResponseModel GetAll()
         {
             List<Object> users = new List<Object>();
             ResponseModel response = new ResponseModel();
 
-            var ByteCode = Convert.FromBase64String(Base64IpAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
-
             SqlCommand cmd = new SqlCommand("GetAllUsers", con);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
-            cmd.Parameters.AddWithValue("@UserID", UserID);
 
             cmd.CommandType = CommandType.StoredProcedure;
 
@@ -122,26 +117,21 @@ namespace GOChatAPI.Controllers
         }
 
         /// <summary>
-        /// Returns a single user based on his/her userid and IP address
+        /// Returns a single user based on his/her userid
         /// </summary>
-        /// <param name="UserID"></param>
         /// <returns>User Object</returns>
-        [Route("{UserID}/{Base64IpAddress}")]
         [HttpGet]
-        public UserModel Get(string UserID, string Base64IpAddress)
+        [Route("")]
+        public UserModel Get()
         {
             UserModel user = new UserModel();
             ValidateUser validate = new ValidateUser();
-            var base64EncodedBytes = Convert.FromBase64String(Base64IpAddress);
-
-            string IpAddress = Encoding.UTF8.GetString(base64EncodedBytes);
 
             con.Open();
 
             SqlCommand cmd = new SqlCommand("GetUserByID", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IpAddress);
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             sda.Fill(dt);
@@ -198,7 +188,7 @@ namespace GOChatAPI.Controllers
         }
 
         /// <summary>
-        /// Returns a single user based on his/her userid and IP address
+        /// Returns a single user based on his/her userid passed in the URI
         /// </summary>
         /// <param name="UserID"></param>
         /// <returns>User Object</returns>
@@ -213,7 +203,7 @@ namespace GOChatAPI.Controllers
 
             con.Open();
 
-            SqlCommand cmd = new SqlCommand("GetUserByIDWithoutIPAddress", con);
+            SqlCommand cmd = new SqlCommand("GetUserByID", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@UserID", UserID);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
@@ -282,18 +272,18 @@ namespace GOChatAPI.Controllers
         }
 
         /// <summary>
-        /// Returns a single user based on his/her token
+        /// Returns if a user is logged in based on his/her token
         /// </summary>
         /// <returns>User Object</returns>
         [Route("validate")]
         [HttpGet]
-        public ResponseModel Get()
+        public ResponseModel ValidateUser()
         {
             ResponseModel response = new ResponseModel();
 
             con.Open();
 
-            SqlCommand cmd = new SqlCommand("GetUserByIDWithoutIPAddress", con);
+            SqlCommand cmd = new SqlCommand("GetUserByID", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
@@ -442,12 +432,11 @@ namespace GOChatAPI.Controllers
         /// <summary>
         /// Change user lastseen to NOW...
         /// </summary>
-        /// <param name="UserId"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        [Route("lastSeen/{UserId}")]
+        [Route("lastSeen")]
         [HttpPut]
-        public string LastSeen(string UserId)
+        public string LastSeen()
         {
             string msg = String.Empty;
 
@@ -455,7 +444,7 @@ namespace GOChatAPI.Controllers
             {
                 SqlCommand cmd = new SqlCommand("LastSeen", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@UserId", UserId);
+                cmd.Parameters.AddWithValue("@UserId", User.Identity.Name);
                 cmd.Parameters.AddWithValue("@LastSeen", DateTime.Now);
 
                 con.Open();
@@ -850,21 +839,17 @@ namespace GOChatAPI.Controllers
         /// <param name="user">Object in which the body is being mapped into</param>
         /// <returns>Response object</returns>
         [HttpPut]
-        [Route("{UserID}/{Base64IPAddress}")]
-        public ResponseModel UpdateUser(string UserID, string Base64IPAddress, UserModel user)
+        [Route("")]
+        public ResponseModel UpdateUser(UserModel user)
         {
             ResponseModel response = new ResponseModel();
 
-            var ByteIPAddress = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteIPAddress);
-
             SqlCommand cmd = new SqlCommand("UpdateUser", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@UserID", UserID);
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             cmd.Parameters.AddWithValue("@UserName", user.UserName);
             cmd.Parameters.AddWithValue("@Email", user.Email);
             cmd.Parameters.AddWithValue("@Description", user.Description);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
 
             con.Open();
             int i = cmd.ExecuteNonQuery();
@@ -893,14 +878,11 @@ namespace GOChatAPI.Controllers
         /// <param name="Base64IPAddress">IP address in a base64 fromat </param>
         /// <returns>Response object</returns>
         [HttpPut]
-        [Route("file/{UserID}/{Base64IPAddress}")]
-        public async Task<ResponseModel> UpdateUserProfilePicture(string UserID, string Base64IPAddress)
+        [Route("file")]
+        public async Task<ResponseModel> UpdateUserProfilePicture()
         {
             ResponseModel response = new ResponseModel();
             bool res = false;
-
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
 
             var ctx = HttpContext.Current;
             var root = ctx.Server.MapPath("~/App_Data");
@@ -914,7 +896,7 @@ namespace GOChatAPI.Controllers
                     var name = file.Headers.ContentDisposition.FileName;
                     name = name.Trim('"');
                     var localFileName = file.LocalFileName;
-                    res = SaveFile(localFileName, name, UserID, IPAddress);
+                    res = SaveFile(localFileName, name, User.Identity.Name);
                 }
 
                 if (res)
@@ -940,7 +922,7 @@ namespace GOChatAPI.Controllers
             return response;
         }
 
-        public bool SaveFile(string localFile, string fileName, string UserID, string IPAddress)
+        public bool SaveFile(string localFile, string fileName, string UserID)
         {
             byte[] fileBytes;
 
@@ -953,7 +935,6 @@ namespace GOChatAPI.Controllers
             SqlCommand cmd = new SqlCommand("UpdateUserImage", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
             cmd.Parameters.AddWithValue("@ProfilePicture", fileBytes);
 
             con.Open();
@@ -978,26 +959,21 @@ namespace GOChatAPI.Controllers
         /// <param name="password">Object the JSON body is being mapped into</param>
         /// <returns>Response object</returns>
         [HttpPut]
-        [Route("password/{UserID}/{Base64IPAddress}")]
-        public ResponseModel ChangePassword(string UserID, string Base64IPAddress, PasswordModel password)
+        [Route("password")]
+        public ResponseModel ChangePassword(PasswordModel password)
         {
             ResponseModel response = new ResponseModel();
             string decodedPassword = String.Empty;
 
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
-
             con.Open();
 
             SqlCommand cmd = new SqlCommand("GetPassword", con);
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             cmd.CommandType = CommandType.StoredProcedure;
 
             SqlCommand cmdUpdate = new SqlCommand("ChangePassword", con);
             cmdUpdate.Parameters.AddWithValue("@Password", general.Encrypt(password.NewPassword));
-            cmdUpdate.Parameters.AddWithValue("@UserID", UserID);
-            cmdUpdate.Parameters.AddWithValue("@IPAddress", IPAddress);
+            cmdUpdate.Parameters.AddWithValue("@UserID", User.Identity.Name);
             cmdUpdate.CommandType = CommandType.StoredProcedure;
 
             SqlDataAdapter sda = new SqlDataAdapter(cmd);

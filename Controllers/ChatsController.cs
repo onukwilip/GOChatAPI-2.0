@@ -334,7 +334,7 @@ namespace GOChatAPI.Controllers
                         int size = (int)file.Headers.ContentDisposition.Size;
                         name = name.Trim('"');
                         var localFileName = file.LocalFileName;
-                        res = SaveFile(localFileName, name, size, UserID, IPAddress, chatID, ChatRoomID);
+                        res = SaveFile(localFileName, name, size, UserID, chatID, ChatRoomID);
                     }
 
                     if (res)
@@ -373,20 +373,15 @@ namespace GOChatAPI.Controllers
         /// <summary>
         /// Posts a new chat file from the chatroom into the database
         /// </summary>
-        /// <param name="UserID">Id of the user that posted the chat</param>
-        /// <param name="Base64IPAddress">Base 64 IP address of the user posting the chat</param>
         /// <param name="Base64ChatRoomID">Base 64 string of user's chatroom</param>
         /// <param name="ChatID">The ID of the chat the files are referring to</param>
         ///<returns>Response object</returns>
         [HttpPost]
-        [Route("{UserID}/{Base64IPAddress}/{Base64ChatRoomID}/{ChatID}")]
-        public async Task<ResponseModel> PostFile(string UserID, string Base64IPAddress, string Base64ChatRoomID, string ChatID)
+        [Route("{Base64ChatRoomID}/{ChatID}")]
+        public async Task<ResponseModel> PostFile(string Base64ChatRoomID, string ChatID)
         {
             ResponseModel response = new ResponseModel();
             bool res = false;
-
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
 
             var ChatRoomByteCode = Convert.FromBase64String(Base64ChatRoomID);
             string ChatRoomID = Encoding.UTF8.GetString(ChatRoomByteCode);
@@ -404,7 +399,7 @@ namespace GOChatAPI.Controllers
                     int size = (int)new FileInfo(file.LocalFileName).Length;
                     name = name.Trim('"');
                     var localFileName = file.LocalFileName;
-                    res = SaveFile(localFileName, name, size, UserID, IPAddress, ChatID, ChatRoomID);
+                    res = SaveFile(localFileName, name, size, User.Identity.Name, ChatID, ChatRoomID);
                 }
 
                 if (res)
@@ -437,23 +432,17 @@ namespace GOChatAPI.Controllers
         /// <summary>
         /// Posts a new chat from the chatroom into the database
         /// </summary>
-        /// <param name="UserID">Id of the user that posted the chat</param>
-        /// <param name="Base64IPAddress">Base 64 IP address of the user posting the chat</param>
         /// <param name="chats">Object in which the JSON body is being mapped into</param>
         ///<returns>Response object</returns>
         [HttpPost]
-        [Route("{UserID}/{Base64IPAddress}")]
-        public ResponseModel PostChat(string UserID, string Base64IPAddress, ChatsModel chats)
+        [Route("")]
+        public ResponseModel PostChat(ChatsModel chats)
         {
             ResponseModel response = new ResponseModel();
 
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
-
             SqlCommand cmd = new SqlCommand("CreateChat", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             cmd.Parameters.AddWithValue("@ChatID", chats.ChatID);
             cmd.Parameters.AddWithValue("@ChatRoomID", chats.ChatroomID);
             cmd.Parameters.AddWithValue("@ChatMessage", chats.Message);
@@ -481,7 +470,7 @@ namespace GOChatAPI.Controllers
             return response;
         }
                 
-        public bool SaveFile(string localFile, string fileName, int fileSize, string UserID, string IPAddress, string chatID, string chatRoomID)
+        public bool SaveFile(string localFile, string fileName, int fileSize, string UserID, string chatID, string chatRoomID)
         {
             byte[] fileBytes;
 
@@ -494,7 +483,6 @@ namespace GOChatAPI.Controllers
             SqlCommand cmd = new SqlCommand("CreateChatFile", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
             cmd.Parameters.AddWithValue("@FilePath", fileBytes);
             cmd.Parameters.AddWithValue("@FileName", fileName);
             cmd.Parameters.AddWithValue("@FileSize", fileSize);

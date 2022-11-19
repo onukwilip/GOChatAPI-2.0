@@ -33,6 +33,8 @@ namespace GOChatAPI
 
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
+            //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
+
             string clientId = string.Empty;
             string clientSecret = string.Empty;
 
@@ -90,6 +92,7 @@ namespace GOChatAPI
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             ClientModel client = context.OwinContext.Get<ClientModel>("ta:client");
             var allowedOrigin = context.OwinContext.Get<string>("ta:clientAllowedOrigin");
@@ -99,7 +102,7 @@ namespace GOChatAPI
                 allowedOrigin = "*";
             }
 
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
+            //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
 
             //con.Open();
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["GOChat"].ConnectionString))

@@ -5,6 +5,8 @@ using System.Web;
 using Microsoft.Owin.Security.Infrastructure;
 using System.Threading.Tasks;
 using GOChatAPI.Models;
+using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 
 namespace GOChatAPI
 {
@@ -46,23 +48,39 @@ namespace GOChatAPI
             if (result)
             {
                 context.SetToken(refreshTokenId);
+
+                ////Stores the refresh token in http only cookie
+                //context.Response.Cookies.Append("refresh_token",
+                //     refreshTokenId, new CookieOptions
+                //     {
+                //         Secure = true,//context.OwinContext.Request.IsSecure, 
+                //         Expires = token.ExpiredTime,
+                //         Path = context.Request.Uri.LocalPath,
+                //         HttpOnly = true,
+                //         SameSite = Microsoft.Owin.SameSiteMode.None,
+                //     });
             }
 
         }
 
         /// <summary>
-        /// Get's previous refresh token by id from database, if exists it deletes 
-        /// it in order to add a new one. It also deserializes the protected ticket 
-        /// from the token if found inorder to build a new ticket and identity for 
-        /// the user mapped to this token. This proceeds to call the 'GrantRefreshToken()' method
+        /// Get's the refresh token Id from httpOnly cookie.
+        /// Uses the retrieved refresh token id to get it's corresponding refresh token from the database, 
+        /// if exists it deletes the token in the database in order to add a new one. 
+        /// It also deserializes the protected ticket from the token if found inorder to build a new ticket 
+        /// and identity for  the user mapped to this token. This proceeds to call the 'GrantRefreshToken()' method
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         public async Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
+            //Get's the refresh token from httpOnly cookie
+            //var refreshTokenId = !string.IsNullOrEmpty(context.Request.Cookies["refresh_token"]) && !(context.Request.Cookies["refresh_token"] == "undefined") ? context.Request.Cookies["refresh_token"] : context.Token;
+            var refreshTokenId = context.Token;
+
             var allowedOrigin = context.OwinContext.Get<string>("ta:clientAllowedOrigin");
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
-            string hashedToken = General.GetHash(context.Token);
+            //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
+            string hashedToken = General.GetHash(refreshTokenId); //General.GetHash(context.Token);
 
             var refreshToken = General.GetRefreshTokenByID(hashedToken);
             if (refreshToken != null)

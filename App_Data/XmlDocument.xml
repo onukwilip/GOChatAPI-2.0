@@ -513,22 +513,18 @@
              <param name="ChatType">The chat specification</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatsController.PostFile(System.String,System.String,System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.ChatsController.PostFile(System.String,System.String)">
              <summary>
              Posts a new chat file from the chatroom into the database
              </summary>
-             <param name="UserID">Id of the user that posted the chat</param>
-             <param name="Base64IPAddress">Base 64 IP address of the user posting the chat</param>
              <param name="Base64ChatRoomID">Base 64 string of user's chatroom</param>
              <param name="ChatID">The ID of the chat the files are referring to</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatsController.PostChat(System.String,System.String,GOChatAPI.Models.ChatsModel)">
+        <member name="M:GOChatAPI.Controllers.ChatsController.PostChat(GOChatAPI.Models.ChatsModel)">
              <summary>
              Posts a new chat from the chatroom into the database
              </summary>
-             <param name="UserID">Id of the user that posted the chat</param>
-             <param name="Base64IPAddress">Base 64 IP address of the user posting the chat</param>
              <param name="chats">Object in which the JSON body is being mapped into</param>
             <returns>Response object</returns>
         </member>
@@ -741,29 +737,28 @@
             Handles all API endoints concerning the user and it's information
             </summary>
         </member>
-        <member name="M:GOChatAPI.Controllers.UserController.GetAll(System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.UserController.GetAll">
             <summary>
             Get all users of the chat application
             </summary>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.UserController.Get(System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.UserController.Get">
             <summary>
-            Returns a single user based on his/her userid and IP address
+            Returns a single user based on his/her userid
             </summary>
-            <param name="UserID"></param>
             <returns>User Object</returns>
         </member>
         <member name="M:GOChatAPI.Controllers.UserController.Get(System.String)">
             <summary>
-            Returns a single user based on his/her userid and IP address
+            Returns a single user based on his/her userid passed in the URI
             </summary>
             <param name="UserID"></param>
             <returns>User Object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.UserController.Get">
+        <member name="M:GOChatAPI.Controllers.UserController.ValidateUser">
             <summary>
-            Returns a single user based on his/her token
+            Returns if a user is logged in based on his/her token
             </summary>
             <returns>User Object</returns>
         </member>
@@ -781,11 +776,10 @@
             <param name="user"></param>
             <returns></returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.UserController.LastSeen(System.String)">
+        <member name="M:GOChatAPI.Controllers.UserController.LastSeen">
             <summary>
             Change user lastseen to NOW...
             </summary>
-            <param name="UserId"></param>
             <returns></returns>
         </member>
         <member name="M:GOChatAPI.Controllers.UserController.Register(GOChatAPI.Models.UserModel)">
@@ -836,7 +830,7 @@
             <param name="Base64IPAddress">This accepts the existing IP address in a base64 string</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.UserController.UpdateUser(System.String,System.String,GOChatAPI.Models.UserModel)">
+        <member name="M:GOChatAPI.Controllers.UserController.UpdateUser(GOChatAPI.Models.UserModel)">
             <summary>
             Updates user information with userid passed in the URI
             </summary>
@@ -845,7 +839,7 @@
             <param name="user">Object in which the body is being mapped into</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.UserController.UpdateUserProfilePicture(System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.UserController.UpdateUserProfilePicture">
             <summary>
             Updates the profile picture of user with userid in the URI
             </summary>
@@ -853,7 +847,7 @@
             <param name="Base64IPAddress">IP address in a base64 fromat </param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.UserController.ChangePassword(System.String,System.String,GOChatAPI.Models.PasswordModel)">
+        <member name="M:GOChatAPI.Controllers.UserController.ChangePassword(GOChatAPI.Models.PasswordModel)">
             <summary>
             Changes the password of user with userid in the URI
             </summary>
@@ -936,7 +930,7 @@
             <param name="Base64IPAddress">Base64 IP address of user sending the request</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetUserChatRooms(System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetUserChatRooms">
             <summary>
             Gets all chatRooms associated to a user
             </summary>
@@ -944,7 +938,7 @@
             <param name="Base64IPAddress">The IP address of the user sending the request</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetChatRoom(System.String,System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetChatRoom(System.String)">
             <summary>
             Get a chatroom related to a user using it's ID
             </summary>
@@ -1163,10 +1157,11 @@
         </member>
         <member name="M:GOChatAPI.RefreshTokenProvider.ReceiveAsync(Microsoft.Owin.Security.Infrastructure.AuthenticationTokenReceiveContext)">
             <summary>
-            Get's previous refresh token by id from database, if exists it deletes 
-            it in order to add a new one. It also deserializes the protected ticket 
-            from the token if found inorder to build a new ticket and identity for 
-            the user mapped to this token. This proceeds to call the 'GrantRefreshToken()' method
+            Get's the refresh token Id from httpOnly cookie.
+            Uses the retrieved refresh token id to get it's corresponding refresh token from the database, 
+            if exists it deletes the token in the database in order to add a new one. 
+            It also deserializes the protected ticket from the token if found inorder to build a new ticket 
+            and identity for  the user mapped to this token. This proceeds to call the 'GrantRefreshToken()' method
             </summary>
             <param name="context"></param>
             <returns></returns>

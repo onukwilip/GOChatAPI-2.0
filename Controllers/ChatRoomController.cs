@@ -510,20 +510,15 @@ namespace GOChatAPI.Controllers
         /// <param name="UserID">The ID of the user sending the request</param>
         /// <param name="Base64IPAddress">The IP address of the user sending the request</param>
         /// <returns>Response object</returns>
-        [Route("{UserID}/{Base64IPAddress}")]
         [HttpGet]
-        public ResponseModel GetUserChatRooms(string UserID, string Base64IPAddress)
+        public ResponseModel GetUserChatRooms()
         {
             ResponseModel response = new ResponseModel();
             List<object> chatRooms = new List<object>();
 
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
-
             SqlCommand cmd = new SqlCommand("GetUserChatrooms", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             sda.Fill(dt);
@@ -578,8 +573,8 @@ namespace GOChatAPI.Controllers
         /// <param name="Base64IPAddress">The IP address of the user sending the request</param>
         /// <returns>Response object</returns>
         [HttpGet]
-        [Route("{UserID}/{Base64IPAddress}/{Base64ChatRoomID}/chatroom")]
-        public ResponseModel GetChatRoom(string Base64ChatRoomID, string UserID, string Base64IPAddress)
+        [Route("{Base64ChatRoomID}/chatroom")]
+        public ResponseModel GetChatRoom(string Base64ChatRoomID)
         {
             //DECLARE INITIAL VARIABLES AND OBJECTS
             ResponseModel response = new ResponseModel();
@@ -589,9 +584,6 @@ namespace GOChatAPI.Controllers
             ChatsController chatsController = new ChatsController();
 
             con.Open();
-
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
 
             var ChatroomByteCode = Convert.FromBase64String(Base64ChatRoomID);
             string ChatRoomID = Encoding.UTF8.GetString(ChatroomByteCode);
@@ -607,8 +599,7 @@ namespace GOChatAPI.Controllers
             //GET A SPECIFIC CHATROOM
             SqlCommand cmd = new SqlCommand("GetChatRoom", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             cmd.Parameters.AddWithValue("@ChatRoomID", ChatRoomID);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();

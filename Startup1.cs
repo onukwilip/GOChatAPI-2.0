@@ -1,10 +1,13 @@
 ﻿using Microsoft.Owin;
 using Microsoft.Owin.Security.OAuth;
+using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Owin.Cors;
+using System.Web.Cors;
+using System.Configuration;
 
 [assembly: OwinStartup(typeof(GOChatAPI.Startup1))]
 
@@ -16,7 +19,27 @@ namespace GOChatAPI
         {
             // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=316888
             //enable cors origin requests
-            app.UseCors(CorsOptions.AllowAll);
+
+            var corsPolicy = new CorsPolicy()
+            {
+                AllowAnyHeader = true,
+                AllowAnyMethod = true,
+                SupportsCredentials = true
+            };
+
+            corsPolicy.Origins.Add("http://localhost:3000");
+            corsPolicy.Origins.Add("http://localhost:3001");
+
+            var policyProvider = new CorsPolicyProvider()
+            {
+                PolicyResolver = (context) => Task.FromResult(corsPolicy)
+            };
+            var corsOptions = new CorsOptions()
+            {
+                PolicyProvider = policyProvider
+            };
+
+            app.UseCors(corsOptions);
 
             var myProvider = new MyAuthorizationServerProvider();
             var refreshTokenProvider = new RefreshTokenProvider();
@@ -30,7 +53,6 @@ namespace GOChatAPI
             };
             app.UseOAuthAuthorizationServer(options);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-
 
             HttpConfiguration config = new HttpConfiguration();
             WebApiConfig.Register(config);
