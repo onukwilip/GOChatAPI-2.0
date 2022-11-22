@@ -266,17 +266,13 @@ namespace GOChatAPI.Controllers
         /// </summary>
         /// <param name="UserID">The ID of the user sending the request</param>
         /// <param name="Base64Password">The base64 password of the user sending the request</param>
-        /// <param name="Base64IPAddress">The IP address of the user sending this request</param>
         /// <param name="RecipientID">The ID of the recipient</param>
         /// <returns>Response object</returns>
-        [Route("{UserID}/{RecipientID}/{Base64IPAddress}/{Base64Password}/block")]
+        [Route("{UserID}/{RecipientID}/{Base64Password}/block")]
         [HttpDelete]
-        public ResponseModel Block_Fella(string UserID, string RecipientID, string Base64IPAddress, string Base64Password)
+        public ResponseModel Block_Fella(string UserID, string RecipientID, string Base64Password)
         {
             ResponseModel response = new ResponseModel();
-
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
 
             var PaswordByteCode = Convert.FromBase64String(Base64Password);
             string Password = Encoding.UTF8.GetString(PaswordByteCode);
@@ -284,7 +280,6 @@ namespace GOChatAPI.Controllers
             SqlCommand cmdUser = new SqlCommand("GetUserByID", con);
             cmdUser.CommandType = CommandType.StoredProcedure;
             cmdUser.Parameters.AddWithValue("@UserID", UserID);
-            cmdUser.Parameters.AddWithValue("@IPAddress", IPAddress);
             SqlDataAdapter sda = new SqlDataAdapter(cmdUser);
             DataTable dt = new DataTable();
             sda.Fill(dt);
@@ -303,7 +298,6 @@ namespace GOChatAPI.Controllers
                     cmd.Parameters.AddWithValue("@From_ID", UserID);
                     cmd.Parameters.AddWithValue("@To_ID", RecipientID);
                     cmd.Parameters.AddWithValue("@UserID", UserID);
-                    cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
 
                     con.Open();
 
@@ -346,18 +340,14 @@ namespace GOChatAPI.Controllers
         /// <param name="Base64IPAddress">Base64 IP address of user sending the request</param>
         /// <returns>Response object</returns>
         [HttpDelete]
-        [Route("{UserID}/{RecipientID}/{Base64IPAddress}/ignore")]
-        public ResponseModel Ignore_Fella(string UserID, string RecipientID, string Base64IPAddress)
+        [Route("{UserID}/{RecipientID}/ignore")]
+        public ResponseModel Ignore_Fella(string UserID, string RecipientID)
         {
             ResponseModel response = new ResponseModel();
-
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
 
             SqlCommand cmd = new SqlCommand("Ignore_Fella", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
             cmd.Parameters.AddWithValue("@RecipientID", RecipientID);
 
             con.Open();
@@ -466,21 +456,16 @@ namespace GOChatAPI.Controllers
         /// </summary>
         /// <param name="UserID">ID of the user sending the request</param>
         /// <param name="RecipientID">ID of the user to be restored</param>
-        /// <param name="Base64IPAddress">Base64 IP address of user sending the request</param>
         /// <returns>Response object</returns>
         [HttpPost]
-        [Route("{UserID}/{RecipientID}/{Base64IPAddress}/unignore")]
-        public ResponseModel Unignore_Fella(string UserID, string RecipientID, string Base64IPAddress)
+        [Route("{UserID}/{RecipientID}/unignore")]
+        public ResponseModel Unignore_Fella(string UserID, string RecipientID)
         {
             ResponseModel response = new ResponseModel();
-
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
 
             SqlCommand cmd = new SqlCommand("UnIgnore_fella", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
             cmd.Parameters.AddWithValue("@RecipientID", RecipientID);
 
             con.Open();
@@ -974,6 +959,62 @@ namespace GOChatAPI.Controllers
 
 
             return response;
+        }
+
+        /// <summary>
+        /// Deletes a chatroom/group
+        /// </summary>
+        /// <param name="groupid">The id of the group to be deleted</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("{groupid}/delete")]
+        public IHttpActionResult DeleteGroup(string groupid)
+        {
+            ResponseModel response = new ResponseModel();
+            var headers = this.Request.Headers;
+            string base64Password;
+            if (headers.Contains("x-password"))
+            {
+                base64Password = headers.GetValues("x-password").FirstOrDefault();
+                string password= General.ConvertFromBase64(base64Password) != null ? General.ConvertFromBase64(base64Password) : "";
+                //Validate user's password
+                UserModel user = General.ValidateUser(User.Identity.Name, password);
+
+                if(user == null)
+                {
+                    return StatusCode(HttpStatusCode.Forbidden);
+                }
+                SqlCommand cmd = new SqlCommand("DeleteChatroom", con);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@userid", User.Identity.Name);
+                cmd.Parameters.AddWithValue("@groupid", groupid);
+                var returnValue=cmd.Parameters.Add("@returnValue", SqlDbType.Int);
+                returnValue.Direction = ParameterDirection.ReturnValue;
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+
+                int i = (int)returnValue.Value;
+
+                con.Close();
+
+                if (i>0)
+                {
+                    response.ResponseCode = (int)ResponseCodes.Deleted;
+                    response.ResponseMessage = ResponseCodes.Deleted.ToString();
+                    return Ok(response);
+                }
+                else
+                {
+                    //return BadRequest("You are not the creator of this group");
+                    return StatusCode(HttpStatusCode.Forbidden);
+                }
+            }
+            else
+            {
+                //return BadRequest("You are not authorized to make this request");
+                return StatusCode(HttpStatusCode.Forbidden);
+            }
         }
 
         public bool SaveFile(string localFile, string chatroom_owner, string chatRoomID)

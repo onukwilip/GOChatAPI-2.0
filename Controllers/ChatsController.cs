@@ -541,21 +541,15 @@ namespace GOChatAPI.Controllers
         /// Delete's a specific chat pertaining a user frm the database
         /// </summary>
         /// <param name="ChatID">The ID of the chat to be deleted</param>
-        /// <param name="UserID">The ID of the user sending this request</param>
-        /// <param name="Base64IPAddress">The base 64 IP address of the user sending the request</param>
         [HttpDelete]
-        [Route("{UserID}/{Base64IPAddress}/{ChatID}")]
-        public ResponseModel Delete(string ChatID, string UserID, string Base64IPAddress)
+        [Route("{ChatID}")]
+        public ResponseModel Delete(string ChatID)
         {
             ResponseModel response = new ResponseModel();
-
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
-
+                        
             SqlCommand cmd = new SqlCommand("DeleteChat", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             cmd.Parameters.AddWithValue("@ChatID", ChatID);
            
             con.Open();
@@ -585,21 +579,15 @@ namespace GOChatAPI.Controllers
         /// Post's or delete's a new chat reaction based on a User ID
         /// </summary>
         /// <param name="chat">The object in which the JSON body will be mapped into</param>
-        /// <param name="UserID">The ID of the user sending this request</param>
-        /// <param name="Base64IPAddress">The base 64 IP address of the user sending the request</param>
         [HttpPost]
-        [Route("{UserID}/{Base64IPAddress}/reaction")]
-        public ResponseModel PostReaction(string UserID, string Base64IPAddress, Reaction chat)
+        [Route("reaction")]
+        public ResponseModel PostReaction(Reaction chat)
         {
             ResponseModel response = new ResponseModel();
 
-            var ByteCode = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(ByteCode);
-
             SqlCommand cmd = new SqlCommand("InsertChatReaction", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
+            cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             cmd.Parameters.AddWithValue("@ChatID", chat.ChatID);
             cmd.Parameters.AddWithValue("@ChatRoomID", chat.ChatroomID);
             cmd.Parameters.AddWithValue("@Reaction", chat.ReactionID);
@@ -639,8 +627,6 @@ namespace GOChatAPI.Controllers
         /// <summary>
         /// Get's all reactions pertaining to a particular chat
         /// </summary>
-        /// <param name="UserID">Id of the user making this request</param>
-        /// <param name="Base64IPAddress">Base 64 IP address of user making this request</param>
         /// <param name="ChatID">Id of chat</param>
         /// <returns>Reaction group list</returns>
         [HttpGet]

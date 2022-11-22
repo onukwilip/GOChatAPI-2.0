@@ -514,5 +514,41 @@ namespace GOChatAPI
                 return false;
             }
         }
+
+        /// <summary>
+        /// Converts a base64 string to UTF8
+        /// </summary>
+        /// <param name="base64">Base64 string to be converted</param>
+        /// <returns>UTF8 string</returns>
+        public static string ConvertFromBase64(string base64)
+        {
+            try
+            {
+                var ByteCode = Convert.FromBase64String(base64);
+                return Encoding.UTF8.GetString(ByteCode);
+            }
+           catch(Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Converts a UTF8 string to base64
+        /// </summary>
+        /// <param name="value">String to be converted</param>
+        /// <returns>Base64 string</returns>
+        public static string ConvertToBase64(string value)
+        {
+            try
+            {
+                byte[] toEncodeAsBytes = ASCIIEncoding.ASCII.GetBytes(value);
+                return Convert.ToBase64String(toEncodeAsBytes);
+            }
+            catch (Exception)
+            {
+                return value;
+            }
+        }
     }
 }

@@ -528,28 +528,22 @@
              <param name="chats">Object in which the JSON body is being mapped into</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatsController.Delete(System.String,System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.ChatsController.Delete(System.String)">
             <summary>
             Delete's a specific chat pertaining a user frm the database
             </summary>
             <param name="ChatID">The ID of the chat to be deleted</param>
-            <param name="UserID">The ID of the user sending this request</param>
-            <param name="Base64IPAddress">The base 64 IP address of the user sending the request</param>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatsController.PostReaction(System.String,System.String,GOChatAPI.Models.Reaction)">
+        <member name="M:GOChatAPI.Controllers.ChatsController.PostReaction(GOChatAPI.Models.Reaction)">
             <summary>
             Post's or delete's a new chat reaction based on a User ID
             </summary>
             <param name="chat">The object in which the JSON body will be mapped into</param>
-            <param name="UserID">The ID of the user sending this request</param>
-            <param name="Base64IPAddress">The base 64 IP address of the user sending the request</param>
         </member>
         <member name="M:GOChatAPI.Controllers.ChatsController.GetChatReactions(System.String)">
             <summary>
             Get's all reactions pertaining to a particular chat
             </summary>
-            <param name="UserID">Id of the user making this request</param>
-            <param name="Base64IPAddress">Base 64 IP address of user making this request</param>
             <param name="ChatID">Id of chat</param>
             <returns>Reaction group list</returns>
         </member>
@@ -635,40 +629,6 @@
             <returns>Response object</returns>
             <param name="request">Maps the body into a request object</param>
         </member>
-        <member name="M:GOChatAPI.Controllers.RequestController.GetSentRequests(System.String,System.String)">
-            <summary>
-            Gets all requests sent by a specific user
-            </summary>
-            <param name="UserID">Parameter for id of user</param>
-            <param name="Base64IPAddress">Parameter for IP address of User in base 64 string to verify if he/she is loggged in</param>
-            <returns>Response object</returns>
-        </member>
-        <member name="M:GOChatAPI.Controllers.RequestController.GetRecievedRequests(System.String,System.String)">
-            <summary>
-            Gets all requests sent to a specific user
-            </summary>
-            <param name="UserID">Parameter for id of user</param>
-            <param name="Base64IPAddress">Parameter for IP address of User in base 64 string to verify if he/she is loggged in</param>
-            <returns>Response object</returns>
-        </member>
-        <member name="M:GOChatAPI.Controllers.RequestController.DeleteRequest(System.String,System.String,System.Int32)">
-            <summary>
-            Deletes a request/invitation sent to or by a user from the database
-            </summary>
-            <param name="UserID">ID of user</param>
-            <param name="Base64IPAddress">Base 64 ip address of user</param>
-            <param name="ID">ID of request in the database table</param>
-            <returns>Response object</returns>
-        </member>
-        <member name="M:GOChatAPI.Controllers.RequestController.AcceptRequest(System.String,System.String,System.Int32)">
-            <summary>
-            Inserts a new chatroom and chatroom member in the database based of the data returned
-            </summary>
-            <param name="UserID">ID of user</param>
-            <param name="Base64IPAddress">Base 64 ip address of user</param>
-            <param name="ID">Get's the ID of the particular request to evaluate</param>
-            <returns>Response object</returns>
-        </member>
         <member name="M:GOChatAPI.Controllers.RequestController.VerifyRequestStatus(System.String,System.String)">
             <summary>
             Verifies if a user is allowed to send a request to another user or chatroom(group)
@@ -677,34 +637,34 @@
             <param name="Recipient">The ID of the recipient</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.RequestController.DeleteRequest(System.String,System.String,System.String)">
-            <summary>
-            Deletes a request/invitation sent to or by a user from the database
-            </summary>
-            <param name="UserID">ID of use/request sender</param>
-            <param name="Base64IPAddress">Base 64 ip address of user</param>
-            <param name="To_ID">ID of request recipient</param>
-            <returns>Response object</returns>
-        </member>
-        <member name="M:GOChatAPI.Controllers.RequestController._GetSentRequests(System.String)">
+        <member name="M:GOChatAPI.Controllers.RequestController._GetSentRequests">
             <summary>
             Gets all requests sent by a specific user
             </summary>
-            <param name="UserID">Parameter for id of user</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.RequestController._GetRecievedRequests(System.String)">
+        <member name="M:GOChatAPI.Controllers.RequestController._GetRecievedRequests">
             <summary>
             Gets all requests sent to a specific user
             </summary>
-            <param name="UserID">Parameter for id of user</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.RequestController._DeleteRequest(System.String,System.Int32)">
+        <member name="M:GOChatAPI.Controllers.RequestController._GetGroupSentRequests(System.String)">
+            <summary>
+            Gets all requests sent by a specific group
+            </summary>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController._GetGroupRecievedRequests(System.String)">
+            <summary>
+            Gets all requests sent to a specific group
+            </summary>
+            <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.RequestController._DeleteRequest(System.Int32)">
             <summary>
             Deletes a request/invitation sent to or by a user from the database
             </summary>
-            <param name="UserID">ID of user</param>
             <param name="ID">ID of request in the database table</param>
             <returns>Response object</returns>
         </member>
@@ -712,15 +672,14 @@
             <summary>
             Inserts a new chatroom and chatroom member in the database based of the data returned
             </summary>
-            <param name="UserID">ID of user</param>
+            <param name="userid">The id of the user/group</param>
             <param name="ID">Get's the ID of the particular request to evaluate</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.RequestController._VerifyRequestStatus_Group(System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.RequestController._VerifyRequestStatus_Group(System.String)">
             <summary>
             Verifies if a user is allowed to send a request to another user or chatroom(group)
             </summary>
-            <param name="UserID">The ID of the sender</param>
             <param name="groupid">The ID of the group</param>
             <returns>Response object</returns>
         </member>
@@ -728,7 +687,7 @@
             <summary>
             Deletes a request/invitation sent to or by a user from the database
             </summary>
-            <param name="UserID">ID of use/request sender</param>
+            <param name="userid">The id of the user/group making the request</param>
             <param name="To_ID">ID of request recipient</param>
             <returns>Response object</returns>
         </member>
@@ -887,17 +846,16 @@
             <param name="chatroomId">The id of the group</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatRoomController.Block_Fella(System.String,System.String,System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Block_Fella(System.String,System.String,System.String)">
             <summary>
             Deletes OR blocks private chatroom users, chats and the chatroom itself
             </summary>
             <param name="UserID">The ID of the user sending the request</param>
             <param name="Base64Password">The base64 password of the user sending the request</param>
-            <param name="Base64IPAddress">The IP address of the user sending this request</param>
             <param name="RecipientID">The ID of the recipient</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatRoomController.Ignore_Fella(System.String,System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Ignore_Fella(System.String,System.String)">
             <summary>
             Temporary blocks or ignores a user in a chatroom
             </summary>
@@ -921,13 +879,12 @@
             <param name="groupid">ID of the group to be exited</param>
             <returns>Response object</returns>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatRoomController.Unignore_Fella(System.String,System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.Unignore_Fella(System.String,System.String)">
             <summary>
             Restore Ignored fella into a chatroom
             </summary>
             <param name="UserID">ID of the user sending the request</param>
             <param name="RecipientID">ID of the user to be restored</param>
-            <param name="Base64IPAddress">Base64 IP address of user sending the request</param>
             <returns>Response object</returns>
         </member>
         <member name="M:GOChatAPI.Controllers.ChatRoomController.GetUserChatRooms">
@@ -975,6 +932,13 @@
              </summary>
              <param name="chatroomid">ID of the chatroom to update</param>
             <returns>Response object</returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.DeleteGroup(System.String)">
+            <summary>
+            Deletes a chatroom/group
+            </summary>
+            <param name="groupid">The id of the group to be deleted</param>
+            <returns></returns>
         </member>
         <member name="M:GOChatAPI.General.Random">
             <summary>
@@ -1082,6 +1046,20 @@
             </summary>
             <param name="token">The token id</param>
             <returns>Returns true if deleted, else false</returns>
+        </member>
+        <member name="M:GOChatAPI.General.ConvertFromBase64(System.String)">
+            <summary>
+            Converts a base64 string to UTF8
+            </summary>
+            <param name="base64">Base64 string to be converted</param>
+            <returns>UTF8 string</returns>
+        </member>
+        <member name="M:GOChatAPI.General.ConvertToBase64(System.String)">
+            <summary>
+            Converts a UTF8 string to base64
+            </summary>
+            <param name="value">String to be converted</param>
+            <returns>Base64 string</returns>
         </member>
         <member name="T:GOChatAPI.Models.RequestModel">
             <summary>
