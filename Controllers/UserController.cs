@@ -112,7 +112,7 @@ namespace GOChatAPI.Controllers
             }
 
             con.Close();
-            
+
             return response;
         }
 
@@ -304,7 +304,7 @@ namespace GOChatAPI.Controllers
                 {
                     int noUser = (int)ResponseCodes.NotFound;
                     response.ResponseCode = noUser;
-                    response.ResponseMessage ="UnAuthenticated";
+                    response.ResponseMessage = "UnAuthenticated";
                 }
             }
             else
@@ -478,7 +478,7 @@ namespace GOChatAPI.Controllers
         [Route("register")]
         public UserModel Register(UserModel user)
         {
-            UserModel returnModel=new UserModel();
+            UserModel returnModel = new UserModel();
             ValidateUser validate = new ValidateUser();
 
             string Id = Guid.NewGuid().ToString();
@@ -560,8 +560,12 @@ namespace GOChatAPI.Controllers
 
                 if (i > 0)
                 {
-                    string mailmsg = general.Mail(user.Email, "onukwilip@gmail.com", "GO Chat", user.UserName, code.ToString(), "no-reply");
+                    var mailmsg = general.Mail(user.Email, "onukwilip@gmail.com", "GO Chat", user.UserName, code.ToString(), "no-reply");
                     //string mailmsg = general.Mail2(user.Email, code.ToString(), "No-reply");
+                    if (mailmsg == null)
+                    {
+                        msg = false;
+                    }
                     msg = true;
                 }
                 else
@@ -794,22 +798,20 @@ namespace GOChatAPI.Controllers
         /// <summary>
         /// This deletes user IP address from log table. Usually done when user logs out of his/her account
         /// </summary>
-        /// <param name="UserID">This accepts the user's id</param>
-        /// <param name="Base64IPAddress">This accepts the existing IP address in a base64 string</param>
+        /// <param name="base64clientid">This accepts the id of the client accessing this application</param>
         /// <returns>Response object</returns>
         [HttpDelete]
-        [Route("IPAddress/{UserID}/{Base64IPAddress}")]
-        public ResponseModel DeleteIPAddress(string UserID, string Base64IPAddress)
+        [Route("logout/{base64clientid}")]
+        public ResponseModel LogOut(string base64clientid)
         {
             ResponseModel response = new ResponseModel();
 
-            var Base64Bytes = Convert.FromBase64String(Base64IPAddress);
-            string IPAddress = Encoding.UTF8.GetString(Base64Bytes);
+            string clientid = General.ConvertFromBase64(base64clientid);
 
-            SqlCommand cmd = new SqlCommand("DeleteIPAddress", con);
+            SqlCommand cmd = new SqlCommand("LogOut", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@UserID", UserID);
-            cmd.Parameters.AddWithValue("@IPAddress", IPAddress);
+            cmd.Parameters.AddWithValue("@userid", User.Identity.Name);
+            cmd.Parameters.AddWithValue("@clientid", clientid);
 
             con.Open();
             int i = cmd.ExecuteNonQuery();

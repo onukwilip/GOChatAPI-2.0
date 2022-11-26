@@ -95,7 +95,7 @@ namespace GOChatAPI
 
             catch (Exception ex)
             {
-                msg = $"{ex}";//$"Something went wrong...😥";
+                msg = null;//$"Something went wrong...😥";
             }
 
             return msg;

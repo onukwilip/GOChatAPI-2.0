@@ -781,12 +781,11 @@
             This is to insert or update user IP address after registeration or login
             </summary>
         </member>
-        <member name="M:GOChatAPI.Controllers.UserController.DeleteIPAddress(System.String,System.String)">
+        <member name="M:GOChatAPI.Controllers.UserController.LogOut(System.String)">
             <summary>
             This deletes user IP address from log table. Usually done when user logs out of his/her account
             </summary>
-            <param name="UserID">This accepts the user's id</param>
-            <param name="Base64IPAddress">This accepts the existing IP address in a base64 string</param>
+            <param name="base64clientid">This accepts the id of the client accessing this application</param>
             <returns>Response object</returns>
         </member>
         <member name="M:GOChatAPI.Controllers.UserController.UpdateUser(GOChatAPI.Models.UserModel)">
