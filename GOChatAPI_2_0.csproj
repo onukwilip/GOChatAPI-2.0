@@ -343,7 +343,9 @@
     <None Include="Properties\PublishProfiles\GOChatAPI - Web Deploy1.pubxml" />
     <None Include="Properties\PublishProfiles\GOChatAPI - Web Deploy2.pubxml" />
     <None Include="Properties\PublishProfiles\GOChatAPI-2-0 - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\GOChatAPI-2-0 - FTP1.pubxml" />
     <None Include="Properties\PublishProfiles\GOChatAPI-2-0 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\GOChatAPI-2-0 - Web Deploy1.pubxml" />
     <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
     <None Include="Properties\PublishProfiles\prince2006-001-site1 - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\prince2006-001-site1 - Web Deploy.pubxml" />

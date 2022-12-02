@@ -49,16 +49,16 @@ namespace GOChatAPI
             {
                 context.SetToken(refreshTokenId);
 
-                ////Stores the refresh token in http only cookie
-                //context.Response.Cookies.Append("refresh_token",
-                //     refreshTokenId, new CookieOptions
-                //     {
-                //         Secure = true,//context.OwinContext.Request.IsSecure, 
-                //         Expires = token.ExpiredTime,
-                //         Path = context.Request.Uri.LocalPath,
-                //         HttpOnly = true,
-                //         SameSite = Microsoft.Owin.SameSiteMode.None,
-                //     });
+                //Stores the refresh token in http only cookie
+                context.Response.Cookies.Append("refresh_token",
+                     refreshTokenId, new CookieOptions
+                     {
+                         Secure = true,//context.OwinContext.Request.IsSecure, 
+                         Expires = token.ExpiredTime,
+                         Path = context.Request.Uri.LocalPath,
+                         HttpOnly = true,
+                         SameSite = Microsoft.Owin.SameSiteMode.None,
+                     });
             }
 
         }
@@ -76,11 +76,11 @@ namespace GOChatAPI
         {
             //Get's the refresh token from httpOnly cookie
             //var refreshTokenId = !string.IsNullOrEmpty(context.Request.Cookies["refresh_token"]) && !(context.Request.Cookies["refresh_token"] == "undefined") ? context.Request.Cookies["refresh_token"] : context.Token;
-            var refreshTokenId = context.Token;
+            var refreshTokenId = context.Token == " " || context.Token == "null" ? context.Request.Cookies["refresh_token"] : context.Token;
 
             var allowedOrigin = context.OwinContext.Get<string>("ta:clientAllowedOrigin");
             //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { allowedOrigin });
-            string hashedToken = General.GetHash(refreshTokenId); //General.GetHash(context.Token);
+            string hashedToken = General.GetHash(refreshTokenId);
 
             var refreshToken = General.GetRefreshTokenByID(hashedToken);
             if (refreshToken != null)
