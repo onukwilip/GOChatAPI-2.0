@@ -100,3 +100,5 @@ namespace GOChatAPI
         }
     }
 }
+
+//curl -OutFile 'GOChat_2_0.bak' 'C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\Backup\GOChat_2_0_2.bak'

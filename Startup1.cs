@@ -30,6 +30,7 @@ namespace GOChatAPI
             corsPolicy.Origins.Add("http://localhost:3000");
             corsPolicy.Origins.Add("http://localhost:3001");
             corsPolicy.Origins.Add("https://gochat-tau.vercel.app");
+            corsPolicy.Origins.Add("http://gochat.h3azh2avb9e7aghq.centralus.azurecontainer.io:3000");
 
             var policyProvider = new CorsPolicyProvider()
             {

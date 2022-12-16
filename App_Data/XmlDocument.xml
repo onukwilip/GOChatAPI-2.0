@@ -528,6 +528,13 @@
              <param name="chats">Object in which the JSON body is being mapped into</param>
             <returns>Response object</returns>
         </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.Put(GOChatAPI.Models.ChatsModel)">
+            <summary>
+            Updates or edits a chat message in the database
+            </summary>
+            <param name="chat">The chat object</param>
+            <returns>Response object</returns>
+        </member>
         <member name="M:GOChatAPI.Controllers.ChatsController.Delete(System.String)">
             <summary>
             Delete's a specific chat pertaining a user frm the database

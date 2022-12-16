@@ -504,7 +504,13 @@ namespace GOChatAPI.Controllers
         }
 
         // PUT: api/Chats/5
+        /// <summary>
+        /// Updates or edits a chat message in the database
+        /// </summary>
+        /// <param name="chat">The chat object</param>
+        /// <returns>Response object</returns>
         [HttpPut]
+        [Route("")]
         public ResponseModel Put(ChatsModel chat)
         {
             ResponseModel response = new ResponseModel();
