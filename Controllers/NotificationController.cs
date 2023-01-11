@@ -52,8 +52,8 @@ namespace GOChatAPI.Controllers
 
                     if (row["IdentityToRenderProfilePicture"].ToString() != null && row["IdentityToRenderProfilePicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])row["IdentityToRenderProfilePicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        string route = row["Type"].ToString() == "User" ? "user" : "chatroom";
+                        imgSrc = $"{general.domain}/api/{route}/{row["IdentityToRenderID"].ToString()}/image";
                     }
 
                     notification.ID = (int)row["ID"];
@@ -118,8 +118,8 @@ namespace GOChatAPI.Controllers
 
                     if (row["IdentityToRenderProfilePicture"].ToString() != null && row["IdentityToRenderProfilePicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])row["IdentityToRenderProfilePicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        string route = row["Type"].ToString() == "User" ? "user" : "chatroom";
+                        imgSrc = $"{general.domain}/api/{route}/{row["IdentityToRenderID"].ToString()}/image"; 
                     }
 
                     notification.ID = (int)row["ID"];
@@ -147,21 +147,6 @@ namespace GOChatAPI.Controllers
                 response.ResponseMessage = ResponseCodes.NotFound.ToString();
             }
 
-            return response;
-        }
-
-
-        /// <summary>
-        /// Get's one notification
-        /// </summary>
-        /// <param name="id">id of the notification</param>
-        /// <returns></returns>
-        // GET: api/Notification/5
-        [HttpGet]
-        public ResponseModel Get(string id)
-        {
-            ResponseModel response = new ResponseModel();
-           
             return response;
         }
 

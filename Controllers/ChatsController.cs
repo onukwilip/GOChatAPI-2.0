@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.IO;
 using System.Data;
+using System.Net.Http.Headers;
 
 namespace GOChatAPI.Controllers
 {
@@ -67,8 +68,7 @@ namespace GOChatAPI.Controllers
 
                 if (authorBytes != null && authorBytes != "")
                 {
-                    var base64 = Convert.ToBase64String((byte[])dtChats.Rows[j]["AuthorImage"]);
-                    authorImage = String.Format("data:image/png;base64, {0}", base64);
+                    authorImage = $"{general.domain}/api/user/{dtChats.Rows[j]["AuthorID"].ToString()}/image";
                 }
 
                 //GET PARENT CHAT AUTHOR NAME
@@ -110,8 +110,7 @@ namespace GOChatAPI.Controllers
 
                         if (fileBytes != null && fileBytes != "")
                         {
-                            var base64 = Convert.ToBase64String((byte[])dtChatFile.Rows[cf]["FilePath"]);
-                            filePath = String.Format("data:image/png;base64, {0}", base64);
+                            filePath = $"{general.domain}/api/chats/{dtChatFile.Rows[cf]["ID"].ToString()}/file";
                         }
 
                         ChatFile file = new ChatFile();
@@ -185,7 +184,7 @@ namespace GOChatAPI.Controllers
                     if (authorBytes != null && authorBytes != "")
                     {
                         var base64 = Convert.ToBase64String((byte[])dtChats.Rows[j]["AuthorImage"]);
-                        authorImage = String.Format("data:image/png;base64, {0}", base64);
+                        authorImage = $"{general.domain}/api/user/{dtChats.Rows[j]["AuthorID"].ToString()}/image";
                     }
 
                     //GET PARENT CHAT AUTHOR NAME
@@ -227,8 +226,7 @@ namespace GOChatAPI.Controllers
 
                             if (fileBytes != null && fileBytes != "")
                             {
-                                var base64 = Convert.ToBase64String((byte[])dtChatFile.Rows[cf]["FilePath"]);
-                                filePath = String.Format("data:image/png;base64, {0}", base64);
+                                filePath = $"{general.domain}/api/chats/{dtChats.Rows[cf]["ID"].ToString()}/file";
                             }
 
                             ChatFile file = new ChatFile();
@@ -704,6 +702,44 @@ namespace GOChatAPI.Controllers
             }
            
             return reactionGroups;
+        }
+
+        /// <summary>
+        /// Get's the profile image of a chatroom/group
+        /// </summary>
+        /// <param name="id">The id of the file</param>
+        /// <returns>Base64 image string</returns>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("{id}/file")]
+        public HttpResponseMessage GetChatFile(string id)
+        {
+            var response = new HttpResponseMessage();
+
+            SqlCommand cmd = new SqlCommand("GetFileBytes", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", id);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+
+                    if (row["FilePath"].ToString() != null && row["FilePath"].ToString() != "")
+                    {
+                        response.StatusCode = HttpStatusCode.OK;
+                        response.Content = new ByteArrayContent((byte[])row["FilePath"]);
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                        return response;
+                    }
+                }
+            }
+
+            response.StatusCode = HttpStatusCode.NotFound;
+            return response;
         }
     }
 }

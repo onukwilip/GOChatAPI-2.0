@@ -28,7 +28,7 @@ namespace GOChatAPI.Controllers
         /// <returns>Response object</returns>
         /// <param name="request">Maps the body into a request object</param>
         [HttpPost]
-        public ResponseModel CreateRequest(RequestModel request)
+        public ResponseModel CreateRequest(RequestModel request )
         {
             ResponseModel response = new ResponseModel();
 
@@ -219,11 +219,10 @@ namespace GOChatAPI.Controllers
                                 ValidateUser to_validate = new ValidateUser();
                                 string fromSrc = String.Empty, toSrc = String.Empty;
 
-                                //From Object
+                                ////From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -249,8 +248,7 @@ namespace GOChatAPI.Controllers
                                 //To Object
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -313,8 +311,7 @@ namespace GOChatAPI.Controllers
                                 //From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -341,7 +338,7 @@ namespace GOChatAPI.Controllers
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
                                     var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/chatroom/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -387,8 +384,7 @@ namespace GOChatAPI.Controllers
                                 //From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/chatroom/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -400,8 +396,7 @@ namespace GOChatAPI.Controllers
                                 //To Object
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -509,11 +504,10 @@ namespace GOChatAPI.Controllers
                                 ValidateUser to_validate = new ValidateUser();
                                 string fromSrc = String.Empty, toSrc = String.Empty;
 
-                                //From Object
+                                ////From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -539,8 +533,7 @@ namespace GOChatAPI.Controllers
                                 //To Object
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -603,8 +596,7 @@ namespace GOChatAPI.Controllers
                                 //From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -631,7 +623,7 @@ namespace GOChatAPI.Controllers
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
                                     var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/chatroom/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -677,8 +669,7 @@ namespace GOChatAPI.Controllers
                                 //From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/chatroom/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -690,8 +681,7 @@ namespace GOChatAPI.Controllers
                                 //To Object
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -779,7 +769,7 @@ namespace GOChatAPI.Controllers
                     {
                         SqlCommand cmdUser = new SqlCommand("GetUserRequests_User_User", con);
                         cmdUser.CommandType = CommandType.StoredProcedure;
-                        cmdUser.Parameters.AddWithValue("@UserID", groupid);
+                        cmdUser.Parameters.AddWithValue("@UserID", User.Identity.Name);
                         cmdUser.Parameters.AddWithValue("@IPAddress", "");
                         cmdUser.Parameters.AddWithValue("@ID", ID);
 
@@ -800,11 +790,10 @@ namespace GOChatAPI.Controllers
                                 ValidateUser to_validate = new ValidateUser();
                                 string fromSrc = String.Empty, toSrc = String.Empty;
 
-                                //From Object
+                                ////From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -830,8 +819,7 @@ namespace GOChatAPI.Controllers
                                 //To Object
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -870,7 +858,7 @@ namespace GOChatAPI.Controllers
                     {
                         SqlCommand cmdUser = new SqlCommand("GetUserRequests_User_Group", con);
                         cmdUser.CommandType = CommandType.StoredProcedure;
-                        cmdUser.Parameters.AddWithValue("@UserID", groupid);
+                        cmdUser.Parameters.AddWithValue("@UserID", User.Identity.Name);
                         cmdUser.Parameters.AddWithValue("@IPAddress", "");
                         cmdUser.Parameters.AddWithValue("@ID", ID);
 
@@ -894,8 +882,7 @@ namespace GOChatAPI.Controllers
                                 //From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -922,7 +909,7 @@ namespace GOChatAPI.Controllers
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
                                     var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/chatroom/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -968,8 +955,7 @@ namespace GOChatAPI.Controllers
                                 //From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/chatroom/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -981,8 +967,7 @@ namespace GOChatAPI.Controllers
                                 //To Object
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -1090,11 +1075,10 @@ namespace GOChatAPI.Controllers
                                 ValidateUser to_validate = new ValidateUser();
                                 string fromSrc = String.Empty, toSrc = String.Empty;
 
-                                //From Object
+                                ////From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -1120,8 +1104,7 @@ namespace GOChatAPI.Controllers
                                 //To Object
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -1184,8 +1167,7 @@ namespace GOChatAPI.Controllers
                                 //From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -1212,7 +1194,7 @@ namespace GOChatAPI.Controllers
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
                                     var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/chatroom/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();
@@ -1258,8 +1240,7 @@ namespace GOChatAPI.Controllers
                                 //From Object
                                 if (dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["From_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["From_ProfilePicture"]);
-                                    fromSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    fromSrc = $"{general.domain}/api/chatroom/{dtUser.Rows[jUser]["From_UserID"].ToString()}/image";
                                 }
 
                                 from.UserID = dtUser.Rows[jUser]["From_UserID"].ToString();
@@ -1271,8 +1252,7 @@ namespace GOChatAPI.Controllers
                                 //To Object
                                 if (dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != null && dtUser.Rows[jUser]["To_ProfilePicture"].ToString() != "")
                                 {
-                                    var base64 = Convert.ToBase64String((byte[])dtUser.Rows[jUser]["To_ProfilePicture"]);
-                                    toSrc = String.Format("data:image/png;base64, {0}", base64);
+                                    toSrc = $"{general.domain}/api/user/{dtUser.Rows[jUser]["To_UserID"].ToString()}/image";
                                 }
 
                                 to.UserID = dtUser.Rows[jUser]["To_UserID"].ToString();

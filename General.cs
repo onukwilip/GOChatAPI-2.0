@@ -36,6 +36,7 @@ namespace GOChatAPI
 
     public class General
     {
+        public readonly string domain = "https://localhost:44358";
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["GOChat"].ConnectionString);
         public static string IPAddress { get; set; }
 

@@ -14,6 +14,7 @@ using System.Web;
 using System.IO;
 using GOChatAPI.Security;
 using System.Web.Http.Cors;
+using System.Net.Http.Headers;
 
 namespace GOChatAPI.Controllers
 {
@@ -60,12 +61,11 @@ namespace GOChatAPI.Controllers
                     UserModel user = new UserModel();
                     ValidateUser validate = new ValidateUser();
 
-                    string imgSrc = String.Empty;
+                    String imgSrc = String.Empty;
 
                     if (dt.Rows[j]["ProfilePicture"].ToString() != null && dt.Rows[j]["ProfilePicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])dt.Rows[j]["ProfilePicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        imgSrc = $"{general.domain}/api/user/{dt.Rows[j]["UserID"].ToString()}/image";
                     }
 
                     user.UserID = dt.Rows[j]["UserID"].ToString();
@@ -74,16 +74,8 @@ namespace GOChatAPI.Controllers
                     user.Description = dt.Rows[j]["Description"].ToString();
                     user.IsOnline = Convert.ToBoolean(dt.Rows[j]["IsOnline"]);
                     user.LastSeen = Convert.ToDateTime(dt.Rows[j]["LastSeen"]);
+                    user.ProfilePicture = imgSrc;
                     validate.UserExists = true;
-
-                    if (imgSrc != "")
-                    {
-                        user.ProfilePicture = imgSrc;
-                    }
-                    else
-                    {
-                        user.ProfilePicture = null;
-                    }
 
                     if (Convert.ToInt32(dt.Rows[j]["Authenticated"]) > 0)
                     {
@@ -144,8 +136,7 @@ namespace GOChatAPI.Controllers
 
                 if (dt.Rows[0]["ProfilePicture"].ToString() != null && dt.Rows[0]["ProfilePicture"].ToString() != "")
                 {
-                    var base64 = Convert.ToBase64String((byte[])dt.Rows[0]["ProfilePicture"]);
-                    imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                    imgSrc = $"{general.domain}/api/user/{dt.Rows[0]["UserID"].ToString()}/image";
                 }
 
                 user.UserID = dt.Rows[0]["UserID"].ToString();
@@ -153,16 +144,17 @@ namespace GOChatAPI.Controllers
                 user.Email = dt.Rows[0]["Email"].ToString();
                 user.IsOnline = Convert.ToBoolean(dt.Rows[0]["IsOnline"]);
                 user.LastSeen = Convert.ToDateTime(dt.Rows[0]["LastSeen"]);
+                user.ProfilePicture = imgSrc;
                 validate.UserExists = true;
 
-                if (imgSrc != "")
-                {
-                    user.ProfilePicture = imgSrc;
-                }
-                else
-                {
-                    user.ProfilePicture = null;
-                }
+                //if (imgSrc != "")
+                //{
+                //    user.ProfilePicture = imgSrc;
+                //}
+                //else
+                //{
+                //    user.ProfilePicture = null;
+                //}
 
                 if (Convert.ToInt32(dt.Rows[0]["Authenticated"]) > 0)
                 {
@@ -218,8 +210,7 @@ namespace GOChatAPI.Controllers
 
                 if (dt.Rows[0]["ProfilePicture"].ToString() != null && dt.Rows[0]["ProfilePicture"].ToString() != "")
                 {
-                    var base64 = Convert.ToBase64String((byte[])dt.Rows[0]["ProfilePicture"]);
-                    imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                    imgSrc = $"{general.domain}/api/user/{dt.Rows[0]["UserID"].ToString()}/image";
                 }
 
                 user.UserID = dt.Rows[0]["UserID"].ToString();
@@ -227,17 +218,18 @@ namespace GOChatAPI.Controllers
                 user.Email = dt.Rows[0]["Email"].ToString();
                 user.Description = dt.Rows[0]["Description"].ToString();
                 user.IsOnline = Convert.ToBoolean(dt.Rows[0]["IsOnline"]);
+                user.ProfilePicture = imgSrc;
                 user.LastSeen = Convert.ToDateTime(dt.Rows[0]["LastSeen"]);
                 validate.UserExists = true;
 
-                if (imgSrc != "")
-                {
-                    user.ProfilePicture = imgSrc;
-                }
-                else
-                {
-                    user.ProfilePicture = null;
-                }
+                //if (imgSrc != "")
+                //{
+                //    user.ProfilePicture = imgSrc;
+                //}
+                //else
+                //{
+                //    user.ProfilePicture = null;
+                //}
 
                 if (Convert.ToInt32(dt.Rows[0]["Authenticated"]) > 0)
                 {
@@ -1018,15 +1010,43 @@ namespace GOChatAPI.Controllers
             return response;
         }
 
-        [HttpGet]
-        [Route("identity")]
+        /// <summary>
+        /// Get's the profile image of a user
+        /// </summary>
+        /// <param name="id">The id of the user</param>
+        /// <returns>Base64 image string</returns>
         [AllowAnonymous]
-        public string _Identity()
+        [HttpGet]
+        [Route("{id}/image")]
+        public HttpResponseMessage GetUserImage(string id)
         {
-            string name = User.Identity.Name;
-            string ip = General.IPAddress;
+            var response = new HttpResponseMessage();
 
-            return $"{name} {ip}";
+            SqlCommand cmd = new SqlCommand("GetUserImage", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", id);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+
+                    if (row["ProfilePicture"].ToString() != null && row["ProfilePicture"].ToString() != "")
+                    {
+                        response.StatusCode = HttpStatusCode.OK;
+                        response.Content = new ByteArrayContent((byte[])row["ProfilePicture"]);
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                        return response;
+                    }
+                    
+                }
+            }
+
+            response.StatusCode = HttpStatusCode.NotFound;
+            return response;
         }
     }
 }

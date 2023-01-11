@@ -554,6 +554,13 @@
             <param name="ChatID">Id of chat</param>
             <returns>Reaction group list</returns>
         </member>
+        <member name="M:GOChatAPI.Controllers.ChatsController.GetChatFile(System.String)">
+            <summary>
+            Get's the profile image of a chatroom/group
+            </summary>
+            <param name="id">The id of the file</param>
+            <returns>Base64 image string</returns>
+        </member>
         <member name="T:GOChatAPI.Controllers.DiscussionController">
             <summary>
             Handles all endpoints concerning discussions
@@ -578,6 +585,11 @@
             </summary>
             <returns>Response object</returns>
         </member>
+        <member name="T:GOChatAPI.Controllers.ImageController">
+            <summary>
+            Controller for returning images
+            </summary>
+        </member>
         <member name="T:GOChatAPI.Controllers.NotificationController">
             <summary>
             Handles all API endpoints concerning notifications
@@ -595,13 +607,6 @@
             </summary>
             <param name="groupid">The Id of the chatroom</param>
             <returns>Response object</returns>
-        </member>
-        <member name="M:GOChatAPI.Controllers.NotificationController.Get(System.String)">
-            <summary>
-            Get's one notification
-            </summary>
-            <param name="id">id of the notification</param>
-            <returns></returns>
         </member>
         <member name="M:GOChatAPI.Controllers.NotificationController.Post(System.Collections.Generic.List{GOChatAPI.Models.NotificationModel})">
             <summary>
@@ -821,6 +826,13 @@
             <param name="password">Object the JSON body is being mapped into</param>
             <returns>Response object</returns>
         </member>
+        <member name="M:GOChatAPI.Controllers.UserController.GetUserImage(System.String)">
+            <summary>
+            Get's the profile image of a user
+            </summary>
+            <param name="id">The id of the user</param>
+            <returns>Base64 image string</returns>
+        </member>
         <member name="T:GOChatAPI.Controllers.ChatRoomController">
             <summary>
             Handles all API's and routes concerning chatrooms
@@ -945,6 +957,13 @@
             </summary>
             <param name="groupid">The id of the group to be deleted</param>
             <returns></returns>
+        </member>
+        <member name="M:GOChatAPI.Controllers.ChatRoomController.GetChatRoomProfileImage(System.String)">
+            <summary>
+            Get's the profile image of a chatroom/group
+            </summary>
+            <param name="id">The id of the chatroom</param>
+            <returns>Base64 image string</returns>
         </member>
         <member name="M:GOChatAPI.General.Random">
             <summary>

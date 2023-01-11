@@ -53,8 +53,8 @@ namespace GOChatAPI.Controllers
 
                     if (headRow["ChatRoomPicture"].ToString() != null && headRow["ChatRoomPicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])headRow["ChatRoomPicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        string route = headRow["ChatRoomType"].ToString() == "Private" ? "user" : "chatroom";
+                        imgSrc = $"{general.domain}/api/{route}/{headRow["IdentityToRender"].ToString()}/image";
                     }
 
                     discussion.ChatRoomID = headRow["ChatRoomID"].ToString();

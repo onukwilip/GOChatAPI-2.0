@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.IO;
+using System.Net.Http.Headers;
 
 namespace GOChatAPI.Controllers
 {
@@ -53,8 +54,7 @@ namespace GOChatAPI.Controllers
 
                     if (dt.Rows[j]["ChatRoomPicture"].ToString() != null && dt.Rows[j]["ChatRoomPicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])dt.Rows[j]["ChatRoomPicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        imgSrc = $"{general.domain}/api/chatroom/{dt.Rows[j]["ChatRoomID"].ToString()}/image";
                     }
 
                     chatRoom.ChatRoomID = dt.Rows[j]["ChatRoomID"].ToString();
@@ -110,8 +110,7 @@ namespace GOChatAPI.Controllers
 
                     if (dt.Rows[j]["ChatRoomPicture"].ToString() != null && dt.Rows[j]["ChatRoomPicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])dt.Rows[j]["ChatRoomPicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        imgSrc = $"{general.domain}/api/chatroom/{dt.Rows[j]["ChatRoomID"].ToString()}/image";
                     }
 
                     chatRoom.ChatRoomID = dt.Rows[j]["ChatRoomID"].ToString();
@@ -170,8 +169,7 @@ namespace GOChatAPI.Controllers
 
                     if (dt.Rows[j]["ProfilePicture"].ToString() != null && dt.Rows[j]["ProfilePicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])dt.Rows[j]["ProfilePicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        imgSrc = $"{general.domain}/api/user/{dt.Rows[j]["UserID"].ToString()}/image";
                     }
 
                     user.UserID = dt.Rows[j]["UserID"].ToString();
@@ -231,8 +229,7 @@ namespace GOChatAPI.Controllers
 
                     if (dt.Rows[j]["ProfilePicture"].ToString() != null && dt.Rows[j]["ProfilePicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])dt.Rows[j]["ProfilePicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        imgSrc = $"{general.domain}/api/user/{dt.Rows[j]["UserID"].ToString()}/image";
                     }
 
                     user.UserID = dt.Rows[j]["UserID"].ToString();
@@ -520,8 +517,8 @@ namespace GOChatAPI.Controllers
 
                     if (dt.Rows[j]["ChatRoomPicture"].ToString() != null && dt.Rows[j]["ChatRoomPicture"].ToString() != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])dt.Rows[j]["ChatRoomPicture"]);
-                        imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                        string route= dt.Rows[j]["ChatRoomType"].ToString()=="Private" ? "user":"chatroom";
+                        imgSrc = $"{general.domain}/api/{route}/{dt.Rows[j]["IdentityToRender"].ToString()}/image";
                     }
 
                     chatRoom.ChatRoomID = dt.Rows[j]["ChatRoomID"].ToString();
@@ -560,6 +557,7 @@ namespace GOChatAPI.Controllers
         [HttpGet]
         [Route("{Base64ChatRoomID}/chatroom")]
         public ResponseModel GetChatRoom(string Base64ChatRoomID)
+
         {
             //DECLARE INITIAL VARIABLES AND OBJECTS
             ResponseModel response = new ResponseModel();
@@ -602,8 +600,8 @@ namespace GOChatAPI.Controllers
 
                 if (dt.Rows[0]["ChatRoomPicture"].ToString() != null && dt.Rows[0]["ChatRoomPicture"].ToString() != "")
                 {
-                    var base64 = Convert.ToBase64String((byte[])dt.Rows[0]["ChatRoomPicture"]);
-                    imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                    string route = dt.Rows[0]["ChatRoomType"].ToString() == "Private" ? "user" : "chatroom";
+                    imgSrc = $"{general.domain}/api/{route}/{dt.Rows[0]["IdentityToRender"].ToString()}/image";
                 }
 
                 chatRoom.ChatRoomID = dt.Rows[0]["ChatRoomID"].ToString();
@@ -623,8 +621,7 @@ namespace GOChatAPI.Controllers
 
                     if (memberBytes != null && memberBytes != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])dtChatRoomMembers.Rows[chm]["ProfilePicture"]);
-                        memberImage = String.Format("data:image/png;base64, {0}", base64);
+                        memberImage = $"{general.domain}/api/user/{dtChatRoomMembers.Rows[chm]["MemberId"].ToString()}/image";
                     }
 
                     user.UserID = dtChatRoomMembers.Rows[chm]["MemberId"].ToString();
@@ -767,8 +764,7 @@ namespace GOChatAPI.Controllers
                 var imgSrc = String.Empty;
                 if (read["ChatRoomPicture"].ToString() != null && read["ChatRoomPicture"].ToString() != "")
                 {
-                    var base64 = Convert.ToBase64String((byte[])read["ChatRoomPicture"]);
-                    imgSrc = String.Format("data:image/png;base64, {0}", base64);
+                    imgSrc = $"{general.domain}/api/chatroom/{read["ChatRoomID"].ToString()}/image";
                 }
 
                 chatroom.ChatRoomID = read["ChatRoomID"].ToString();
@@ -789,8 +785,7 @@ namespace GOChatAPI.Controllers
 
                     if (memberBytes != null && memberBytes != "")
                     {
-                        var base64 = Convert.ToBase64String((byte[])dtChatRoomMembers.Rows[chm]["ProfilePicture"]);
-                        memberImage = String.Format("data:image/png;base64, {0}", base64);
+                        memberImage = $"{general.domain}/api/user/{dtChatRoomMembers.Rows[chm]["MemberId"].ToString()}/image";
                     }
 
                     user.UserID = dtChatRoomMembers.Rows[chm]["MemberId"].ToString();
@@ -1045,6 +1040,44 @@ namespace GOChatAPI.Controllers
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Get's the profile image of a chatroom/group
+        /// </summary>
+        /// <param name="id">The id of the chatroom</param>
+        /// <returns>Base64 image string</returns>
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("{id}/image")]
+        public HttpResponseMessage GetChatRoomProfileImage(string id)
+        {
+            var response = new HttpResponseMessage();
+
+            SqlCommand cmd = new SqlCommand("GetChatroomImage", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@id", id);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            sda.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+
+                    if (row["ChatRoomPicture"].ToString() != null && row["ChatRoomPicture"].ToString() != "")
+                    {
+                        response.StatusCode = HttpStatusCode.OK;
+                        response.Content = new ByteArrayContent((byte[])row["ChatRoomPicture"]);
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                        return response;
+                    }
+                }
+            }
+
+            response.StatusCode = HttpStatusCode.NotFound;
+            return response;
         }
     }
 }
