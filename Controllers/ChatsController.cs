@@ -31,31 +31,39 @@ namespace GOChatAPI.Controllers
         /// Get's the chats pertaining to a particular chatroom
         /// </summary>
         /// <param name="Base64ChatRoomID">Chatroom id in base 64 format</param>
+        /// <param name="base64date">Date range of chats to be returned</param>
         /// <returns>Chat model</returns>
-        [Route("{Base64ChatRoomID}")]
-        public List<ChatsModel> GetChatRoomChats(string Base64ChatRoomID)
+        [HttpGet]
+        [Route("{Base64ChatRoomID}/{base64date}")]
+        public Dictionary<string, ChatsModel> GetChatRoomChats(string Base64ChatRoomID, string base64date)
         {
-            List<ChatsModel> chats = new List<ChatsModel>();
+            Dictionary<string, ChatsModel> chats = new Dictionary<string, ChatsModel>();
 
-            var ChatroomByteCode = Convert.FromBase64String(Base64ChatRoomID);
-            string ChatRoomID = Encoding.UTF8.GetString(ChatroomByteCode);
+            string dateString = General.ConvertFromBase64(base64date);
+
+            DateTime dateRange = Convert.ToDateTime(dateString);
+
+            string ChatRoomID = General.ConvertFromBase64(Base64ChatRoomID);
 
             //GET ALL CHATS IN THE CHATROOM
             SqlCommand cmdChats = new SqlCommand("GetChatRoomChats", con);
             cmdChats.CommandType = CommandType.StoredProcedure;
             cmdChats.Parameters.Clear();
             cmdChats.Parameters.AddWithValue("@ChatRoomID", ChatRoomID);
+            cmdChats.Parameters.AddWithValue("@DateRange", dateRange);
             SqlDataAdapter sdaChats = new SqlDataAdapter(cmdChats);
             DataTable dtChats = new DataTable();
             sdaChats.Fill(dtChats);
 
-           /* //GET PARENT CHAT AUTHOR NAME
-            SqlCommand cmdChatParent = new SqlCommand("GetChatAuthorName", con); //SELECT u.UserName FROM Chats ch INNER JOIN Users u on ch.AuthorID = u.UserID and ch.ChatID=@ChatID
-            cmdChatParent.CommandType = CommandType.StoredProcedure; */
+            if ((int)dtChats.Rows[0]["AllChatsCount"] != 0 && (int)dtChats.Rows[0]["CurrentChatsCount"] == 0)
+            {
+                return GetChatRoomChats(Base64ChatRoomID, General.ConvertToBase64(dateRange.AddDays(-1).ToString()));
+            }
 
-          /*  //GET EACH CHAT FILES
-            SqlCommand cmdChatFile = new SqlCommand("GetChatFile", con);
-            cmdChatFile.CommandType = CommandType.StoredProcedure; */
+            if ((int)dtChats.Rows[0]["AllChatsCount"] == 0)
+            {
+                return chats;
+            }
 
             //GET ALL CHATS FROM DATABASE AND MAP INTO CHAT ARRAY 
             for (int j = 0; j < dtChats.Rows.Count; j++)
@@ -64,7 +72,7 @@ namespace GOChatAPI.Controllers
                 List<ChatFile> files = new List<ChatFile>();
                 List<ReactionGroup> reactions = new List<ReactionGroup>();
                 Author author = new Author();
-                string authorBytes = dtChats.Rows[j]["AuthorImage"].ToString(), authorImage = String.Empty, chatID = dtChats.Rows[j]["ChatID"].ToString(), parentID= dtChats.Rows[j]["ParentID"].ToString();
+                string authorBytes = dtChats.Rows[j]["AuthorImage"].ToString(), authorImage = String.Empty, chatID = dtChats.Rows[j]["ChatID"].ToString(), parentID = dtChats.Rows[j]["ParentID"].ToString();
 
                 if (authorBytes != null && authorBytes != "")
                 {
@@ -143,7 +151,9 @@ namespace GOChatAPI.Controllers
                 reactions = GetChatReactions(chatID);
                 chat.Reactions = reactions;
 
-                chats.Add(chat);
+                if (!chats.ContainsKey(chat.ChatID))
+                    chats.Add(chat.ChatID, chat);
+
             }
 
             return chats;
@@ -467,7 +477,7 @@ namespace GOChatAPI.Controllers
 
             return response;
         }
-                
+
         public bool SaveFile(string localFile, string fileName, int fileSize, string UserID, string chatID, string chatRoomID)
         {
             byte[] fileBytes;
@@ -550,12 +560,12 @@ namespace GOChatAPI.Controllers
         public ResponseModel Delete(string ChatID)
         {
             ResponseModel response = new ResponseModel();
-                        
+
             SqlCommand cmd = new SqlCommand("DeleteChat", con);
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@UserID", User.Identity.Name);
             cmd.Parameters.AddWithValue("@ChatID", ChatID);
-           
+
             con.Open();
             int i = cmd.ExecuteNonQuery();
             con.Close();
@@ -679,8 +689,8 @@ namespace GOChatAPI.Controllers
                             Author author = new Author();
 
                             reaction.ChatID = dtReactions.Rows[rc]["ChatID"].ToString();
-                            reaction.ChatroomID= dtReactions.Rows[rc]["ChatRoomID"].ToString();
-                            reaction.ReactionID= dtReactions.Rows[rc]["Reaction"].ToString();
+                            reaction.ChatroomID = dtReactions.Rows[rc]["ChatRoomID"].ToString();
+                            reaction.ReactionID = dtReactions.Rows[rc]["Reaction"].ToString();
                             reaction.DateCreated = Convert.ToDateTime(dtReactions.Rows[rc]["DateCreated"].ToString());
 
                             author.AuthorID = dtReactions.Rows[rc]["UserID"].ToString();
@@ -700,7 +710,7 @@ namespace GOChatAPI.Controllers
                     reactionGroups.Add(reactionGroup);
                 }
             }
-           
+
             return reactionGroups;
         }
 

@@ -486,11 +486,12 @@
             Defines all API endoints concerning chats in a chatroom
             </summary>
         </member>
-        <member name="M:GOChatAPI.Controllers.ChatsController.GetChatRoomChats(System.String)">
+        <member name="M:GOChatAPI.Controllers.ChatsController.GetChatRoomChats(System.String,System.String)">
             <summary>
             Get's the chats pertaining to a particular chatroom
             </summary>
             <param name="Base64ChatRoomID">Chatroom id in base 64 format</param>
+            <param name="base64date">Date range of chats to be returned</param>
             <returns>Chat model</returns>
         </member>
         <member name="M:GOChatAPI.Controllers.ChatsController.Get(System.String)">

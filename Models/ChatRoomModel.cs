@@ -16,7 +16,7 @@ namespace GOChatAPI.Models
         public string ChatRoom_Owner { get; set; }
         public DateTime LastSeen { get; set; }
         public List<UserModel> Members { get; set; }
-        public List<ChatsModel> Chats { get; set; }
+        public Dictionary<string,ChatsModel> Chats { get; set; }
     }
     public class ChatRoomProfileModel
     {

@@ -562,7 +562,7 @@ namespace GOChatAPI.Controllers
             //DECLARE INITIAL VARIABLES AND OBJECTS
             ResponseModel response = new ResponseModel();
             List<object> chatRooms = new List<object>();
-            List<ChatsModel> chats = new List<ChatsModel>();
+            Dictionary<string,ChatsModel> chats = new Dictionary<string, ChatsModel>();
             List<UserModel> members = new List<UserModel>();
             ChatsController chatsController = new ChatsController();
 
@@ -633,7 +633,7 @@ namespace GOChatAPI.Controllers
                     members.Add(user);
                 }
 
-                chats = chatsController.GetChatRoomChats(Base64ChatRoomID);
+                chats = chatsController.GetChatRoomChats(Base64ChatRoomID, General.ConvertToBase64(DateTime.Now.ToString()));
                 chatRoom.Chats = chats;
                 chatRoom.Members = members;
 
@@ -656,74 +656,6 @@ namespace GOChatAPI.Controllers
             return response;
         }
 
-        /*  [HttpGet]
-          [Route("{chatroomid}/profile")]
-          public ResponseModel GetChatroom(string chatroomid)
-          {
-              ResponseModel response = new ResponseModel();
-              ChatRoomProfileModel chatroom = new ChatRoomProfileModel();
-              List<object> list = new List<object>();
-              List<ChatsModel> chats = new List<ChatsModel>();
-              ChatsController chatsController = new ChatsController();
-              byte[] toEncodeChatroomIDAsBytes = ASCIIEncoding.ASCII.GetBytes(chatroomid);
-              string Base64ChatRoomID = Convert.ToBase64String(toEncodeChatroomIDAsBytes);
-
-              //GET'S CHATROOM DETAILS
-              string query = "SELECT * FROM ChatRoom WHERE ChatRoomID=@chatroomid";
-              SqlCommand cmd = new SqlCommand(query, con);
-              cmd.Parameters.AddWithValue("@chatroomid", chatroomid);
-              con.Open();
-              SqlDataReader read = cmd.ExecuteReader();
-
-              //GET ALL CHATROOM MEMBERS
-              SqlCommand cmdChatRoomMembers = new SqlCommand("GetChatRoomMembers", con);
-              cmdChatRoomMembers.CommandType = CommandType.StoredProcedure;
-              cmdChatRoomMembers.Parameters.AddWithValue("@ChatRoomID", chatroomid);
-              SqlDataAdapter sdaChatRoomMembers = new SqlDataAdapter(cmdChatRoomMembers);
-              DataTable dtChatRoomMembers = new DataTable();
-
-              //GET'S CHATROOM CHATS
-              chats = chatsController.GetChatRoomChats(Base64ChatRoomID);
-
-              if (read.HasRows && read.Read())
-              {
-                  var imgSrc = String.Empty;
-                  if (read["ChatRoomPicture"].ToString() != null && read["ChatRoomPicture"].ToString() != "")
-                  {
-                      var base64 = Convert.ToBase64String((byte[])read["ChatRoomPicture"]);
-                      imgSrc = String.Format("data:image/png;base64, {0}", base64);
-                  }
-
-                  chatroom.ChatRoomID = read["ChatRoomID"].ToString();
-                  chatroom.ChatRoomName = read["ChatRoomName"].ToString();
-                  chatroom.Type = read["ChatRoomType"].ToString();
-                  chatroom.ChatRoom_Owner = read["ChatRoom_Owner"].ToString();
-
-                  read.Close();
-
-                  sdaChatRoomMembers.Fill(dtChatRoomMembers);
-
-                  chatroom.MembersCount = dtChatRoomMembers.Rows.Count;
-                  chatroom.ChatsCount = chats.Count;
-                  chatroom.ProfilePicture = imgSrc;
-
-                  list.Add(chatroom);
-
-                  response.ResponseCode = (int)ResponseCodes.Successfull;
-                  response.ResponseMessage = ResponseCodes.Successfull.ToString();
-                  response.Data = list;
-              }
-              else
-              {
-                  response.ResponseCode = (int)ResponseCodes.NotFound;
-                  response.ResponseMessage = ResponseCodes.NotFound.ToString();
-              }
-
-              con.Close();
-
-              return response;
-          } */
-
         /// <summary>
         /// Get a chatroom related to a user using it's ID (optimized)
         /// </summary>
@@ -736,7 +668,7 @@ namespace GOChatAPI.Controllers
             ResponseModel response = new ResponseModel();
             ChatRoomModel chatroom = new ChatRoomModel();
             List<object> list = new List<object>();
-            List<ChatsModel> chats = new List<ChatsModel>();
+            Dictionary<string,ChatsModel> chats = new Dictionary<string, ChatsModel>();
             ChatsController chatsController = new ChatsController();
             List<UserModel> members = new List<UserModel>();
             byte[] toEncodeChatroomIDAsBytes = ASCIIEncoding.ASCII.GetBytes(chatroomid);
@@ -757,7 +689,7 @@ namespace GOChatAPI.Controllers
             DataTable dtChatRoomMembers = new DataTable();
 
             //GET'S CHATROOM CHATS
-            chats = chatsController.GetChatRoomChats(Base64ChatRoomID);
+            chats = chatsController.GetChatRoomChats(Base64ChatRoomID, General.ConvertToBase64(DateTime.Now.ToString()));
 
             if (read.HasRows && read.Read())
             {
