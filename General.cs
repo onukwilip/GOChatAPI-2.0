@@ -37,8 +37,8 @@ namespace GOChatAPI
     public class General
     {
         //public readonly string domain = "https://localhost:44358";
-        public readonly string domain = "https://gochatapi-2-0.azurewebsites.net";
-        //public readonly string domain = "https://gochatapi.goit.net.ng";
+        //public readonly string domain = "https://gochatapi-2-0.azurewebsites.net";
+        public readonly string domain = "https://gochatapi.goit.net.ng";
         SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["GOChat"].ConnectionString);
         public static string IPAddress { get; set; }
 
