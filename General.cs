@@ -87,7 +87,7 @@ namespace GOChatAPI
                     client.Connect("smtp.gmail.com", 465, true);
 
                     // Note: only needed if the SMTP server requires authentication
-                    client.Authenticate("onukwilip@gmail.com", "xgtswucwcflackth");
+                    client.Authenticate("onukwilip@gmail.com", "zkauigqmghjdtges");
 
                     client.Send(message);
                     client.Disconnect(true);
